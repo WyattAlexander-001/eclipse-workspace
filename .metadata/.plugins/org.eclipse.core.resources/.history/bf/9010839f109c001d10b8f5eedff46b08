@@ -18,7 +18,7 @@ public class ForLoopExample {
 			for (int j = 1; j <= 9; j++)
 				System.out.println(i + " * " + j + " = " + i * j);
 		System.out.println("\n=================\n");
-		//
+		
 		for (int i = 0; i < 81; i++) { // TODO Modify the following to produce the same multiplication table as above.
 			int firstNum = i/9 + 1; //Integer division truncats after decimal place so when its 8/9+1 = 1.88... => 1. So 9/9+1 =2
 			int secondNum = i%9 + 1; //Starts at 1 and counts up and 9/9+1 resets to 1.
