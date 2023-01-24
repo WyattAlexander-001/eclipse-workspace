@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;IntSelectionSorter.java&apos; to &apos;Bushman_Wyatt_Lab8/src/(default package)&apos;&#x0A;- Original project: &apos;JOB_READY_JAVA&apos;&#x0A;- Destination element: &apos;Bushman_Wyatt_Lab8/src/(default package)&apos;&#x0A;- Original element: &apos;IntSelectionSorter.java&apos;" description="Copy compilation unit" destination="=Bushman_Wyatt_Lab8/src&lt;" element1="/src&lt;{IntSelectionSorter.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1667254002447" units="1" version="1.0"/>
+</session>

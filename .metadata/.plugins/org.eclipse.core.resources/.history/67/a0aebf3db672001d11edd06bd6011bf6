@@ -1,0 +1,31 @@
+import java.util.ArrayList;
+class PizzaOrder{
+    ArrayList<Pizza> pizzas = new ArrayList();
+    
+    public double getPrice(){
+        int totalPrice = 0;
+        for(Pizza p: pizzas)
+            totalPrice += p.getPrice();
+        
+        return totalPrice;
+    }
+    
+    public void display(){
+        System.out.println("---------------------------------");
+        System.out.println("\t ORDER RECEIPT");
+        System.out.println("---------------------------------");
+        for(Pizza p: pizzas){
+            p.display();
+            System.out.println("---------------------------------");
+        }
+        
+        System.out.println("SUBTOTAL: $" + getPrice());
+        System.out.println("TAX: $" + String.format("%.2f", (((double)getPrice()) * 0.08)));
+        System.out.println("TOTAL: $" + String.format("%.2f", (((double)getPrice()) * 1.08)));
+        System.out.println("---------------------------------");
+    }
+    
+    public void addPizza(Pizza pizza){
+        pizzas.add(pizza);
+    }
+}

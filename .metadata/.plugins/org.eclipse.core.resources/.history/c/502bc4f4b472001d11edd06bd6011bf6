@@ -1,0 +1,11 @@
+public class MeatLoversPizza extends Pizza {
+//Constructor for the MeatLoversPizza class
+public MeatLoversPizza() {
+//Set the size and type of the pizza
+size = Size.LARGE;
+type = "meat";
+//Set the toppings of the pizza
+String[] toppings = {"sausage", "bacon", "pepperoni"};
+setToppings(toppings);
+}
+}

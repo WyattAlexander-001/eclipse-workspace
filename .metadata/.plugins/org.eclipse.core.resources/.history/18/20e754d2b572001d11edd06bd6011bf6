@@ -1,0 +1,6 @@
+enum Toppings{
+    pepperoni,
+    sausage,
+    peppers,
+    onions
+}

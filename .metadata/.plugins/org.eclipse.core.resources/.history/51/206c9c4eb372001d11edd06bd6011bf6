@@ -1,0 +1,68 @@
+
+public class Pizza {
+	private Size size;
+	private String type;
+	private String[] toppings;
+	
+	public Pizza() {
+		this.size = null;
+		this.type = null;
+		toppings = new String[5];
+	}
+	
+	//Getters/Setters:
+	//Using ENUMS Size.ENUM to set "this" objects size. Used "input" to make it easier to read
+	public void setSize(String input) {
+		if(input.equals("small")) {
+			this.size = Size.SMALL;
+		}else if(input.equals("medium")){
+			this.size = Size.MEDIUM;
+		}else if(input.equals("large")) {
+			this.size = Size.LARGE;
+		}else {
+			System.out.println("Error");
+		}
+	}
+	
+	public Size getSize() {
+		return this.size;
+	}
+	
+	public String getType() {
+		return type;
+		}
+		public void setType(String type) {
+		this.type = type;
+		}
+		public String[] getToppings() {
+		return toppings;
+		}
+		public void setToppings(String[] toppings) {
+		this.toppings = toppings;
+		}
+		//Method to calculate the price of the pizza
+		public double calculatePrice() {
+		double price = 0;
+		//Check the size of the pizza and calculate the price accordingly
+		if(size == Size.SMALL) {
+		price = 10;
+		}
+		else if(size == Size.MEDIUM) {
+		price = 12;
+		}
+		else if(size == Size.LARGE) {
+		price = 14;
+		}
+		//Check the type of the pizza and add the price of the toppings accordingly
+		if(type.equals("veggie")) {
+		price += 2 * toppings.length;
+		}
+		else if(type.equals("meat")) {
+		price += 3 * toppings.length;
+		}
+		else if(type.equals("cheese")) {
+		price += 1.5 * toppings.length;
+		}
+		return price;
+		}	
+}

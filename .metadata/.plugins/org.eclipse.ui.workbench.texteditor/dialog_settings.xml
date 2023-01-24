@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="data"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="array"/>
+			<item value="input"/>
+			<item value="obj"/>
+			<item value="ctr"/>
+			<item value="student"/>
+			<item value="coolnessFactor"/>
+			<item value="Main"/>
+			<item value="SecondRangeLength"/>
+			<item value="range2"/>
+			<item value="range1"/>
+			<item value="endLimit2"/>
+			<item value="startLimit2"/>
+			<item value="endLimit1"/>
+			<item value="startLimit1"/>
+			<item value="percentageOfOverlapping"/>
+		</list>
+		<list key="replacehistory">
+			<item value="data"/>
+			<item value="student"/>
+			<item value="i"/>
+			<item value=""/>
+			<item value="yearHalf"/>
+			<item value="constructor_example"/>
+			<item value="secondRangeLength"/>
+			<item value="SecondRangeLength"/>
+			<item value="firstRangeLength"/>
+			<item value="secondRangeEnd"/>
+			<item value="secondRangeStart"/>
+			<item value="firstRangeEnd"/>
+			<item value="firstRangeStart"/>
+			<item value="percentOverlap"/>
+			<item value="union"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="65"/>
+		<item key="DIALOG_Y_ORIGIN" value="405"/>
+		<item key="DIALOG_WIDTH" value="336"/>
+		<item key="DIALOG_HEIGHT" value="402"/>
+		<item key="DIALOG_FONT_NAME" value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont"/>
+	</section>
+</section>

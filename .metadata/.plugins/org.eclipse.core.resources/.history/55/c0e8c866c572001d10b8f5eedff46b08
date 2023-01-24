@@ -1,0 +1,142 @@
+import java.util.Scanner;
+
+public class Driver {
+    private static Scanner input = new Scanner(System.in);
+    private static PizzaOrder pizzaOrder = new PizzaOrder();
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("-------------------------------------------------");
+            System.out.println("MAIN MENU:\n");
+            
+            System.out.println("\t(O)rder a pizza");
+            System.out.println("\t(S)pecials list");
+            System.out.println("\t(R)Receipt display");
+            System.out.println("\t(Q)uit");
+            
+            System.out.print("\nEnter Choice: ");
+            System.out.println("-------------------------------------------------");
+            String choice = input.nextLine();
+
+            switch (choice.toUpperCase()) {
+                case "O":
+                    orderPizza();
+                    break;
+                case "S":
+                    orderSpecialPizza();
+                    break;
+                case "R":
+                    showReceipt();
+                    break;
+                case "Q":
+                    System.out.println("Exiting Program...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid input. Please try again!");
+                    break;
+            }
+        }
+    }
+
+    private static void showReceipt() {
+        System.out.println("------------------------------");
+        System.out.println("\tORDER RECEIPT");
+        System.out.println("------------------------------");
+        pizzaOrder.display();
+    }
+
+    private static void orderSpecialPizza() {
+        System.out.println("SELECT SPECIAL:");
+        System.out.println("\t(V)eggie Lovers Pizza");
+        System.out.println("\t(M)eat Lovers Pizza");
+        System.out.println("\t(B)ack to Main Menu");
+        System.out.print("Enter choice: ");
+        String choice = input.nextLine();
+        System.out.println("------------------------------");
+
+        switch (choice.toUpperCase()) {
+            case "V":
+                pizzaOrder.addPizza(new VeggieLoversPizza());
+                break;
+            case "M":
+                pizzaOrder.addPizza(new MeatLoversPizza());
+                break;
+            case "B":
+                // Do nothing..
+                break;
+            default:
+                System.out.println("Invalid input. Please try again.");
+                orderSpecialPizza();
+                break;
+        }
+    }
+
+    private static void orderPizza() {
+        System.out.println("SELECT PIZZA SIZE:");
+        System.out.println("\t(S)mall");
+        System.out.println("\t(M)edium");
+        System.out.println("\t(L)arge");
+        System.out.print("Enter choice: ");
+        String choice = input.nextLine();
+        System.out.println("------------------------------");
+
+        Size size = null;
+
+        switch (choice.toUpperCase()) {
+            case "S":
+                size = Size.SMALL;
+                break;
+            case "M":
+                size = Size.MEDIUM;
+                break;
+            case "L":
+                size = Size.LARGE;
+                break;
+            default:
+                System.out.println("Invalid input. Please try again.");
+                orderPizza();
+                break;
+        }
+
+        Pizza pizza = new Pizza();
+        pizza.setSize(size);
+
+        String toppingChoice;
+
+        do {
+            System.out.println("SELECT TOPPINGS:");
+            System.out.println("\t(P)epperoni");
+            System.out.println("\t(S)ausage");
+            System.out.println("\t(O)nions");
+            System.out.println("\t(B)ell peppers");
+            System.out.println("\t(D)one - no more toppings to add");
+            System.out.print("Enter choice: ");
+            toppingChoice = input.nextLine();
+            System.out.println("------------------------------");
+
+            switch (toppingChoice.toUpperCase()) {
+                case "P":
+                    pizza.addTopping(Topping.PEPPERONI);
+                    break;
+                case "S":
+                    pizza.addTopping(Topping.SAUSAGE);
+                    break;
+                case "O":
+                    pizza.addTopping(Topping.ONIONS);
+                    break;
+                case "B":
+                    pizza.addTopping(Topping.PEPPERS);
+                    break;
+                case "D":
+                    // Do nothing..
+                    break;
+                default:
+                    System.out.println("Invalid input. Please try again.");
+                    break;
+            }
+        } while (!toppingChoice.equalsIgnoreCase("D"));
+
+        pizzaOrder.addPizza(pizza);
+    }
+}

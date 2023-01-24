@@ -1,0 +1,45 @@
+import java.util.ArrayList;
+class Pizza{
+    private Size size;
+    private ArrayList<Toppings> toppings = new ArrayList();
+    
+    public Size getSize(){
+        return size;
+    }
+    
+    public void setSize(Size size){
+        this.size = size;
+    }
+    
+    public int getPrice(){
+        int price = toppings.size();
+        switch (size) {
+            case small:
+                price += 10;
+                break;
+            case medium:
+                price += 15;
+                break;
+            case large:
+                price += 20;
+                break;
+            default:
+                break;
+        }
+        
+        return price;
+    }
+    
+    public void display(){
+        System.out.println("\tSize: " + size.toString().toUpperCase());
+        System.out.println("\tTOPPINGS: ");
+        for(Toppings t: toppings)
+            System.out.println("\t\t" + t.toString().toUpperCase());
+        System.out.println("\tItem Price: $" + getPrice());
+    }
+    
+    public void addToppings(Toppings Topping){
+        toppings.add(Topping);
+    }
+    
+}
