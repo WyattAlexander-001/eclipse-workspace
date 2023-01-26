@@ -1,0 +1,16 @@
+package lectureCode;
+
+public class Card {
+    public enum Suit { clubs, spades, hearts, diamonds};
+    public enum Rank { ace, two, three, four, five, six, 		seven, eight, nine, ten, jack, queen, king}
+    private Rank rank; 
+    private Suit suit;
+
+    public Card (Suit s, Rank rank) {
+        suit = s; this.rank = rank;
+    }
+
+    public String toString() { 
+        return rank.toString() + " of " + suit.toString();
+    }
+}

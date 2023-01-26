@@ -1,0 +1,37 @@
+package lectureCode;
+
+public class Card {
+    public enum Suit { clubs, spades, hearts, diamonds};
+    public enum Rank { ace, two, three, four, five, six, seven, eight, nine, ten, jack, queen, king}
+    
+    private Rank rank; 
+    private Suit suit;
+
+    public Card (Suit s, Rank rank) {
+        suit = s; 
+        this.rank = rank;
+    }
+
+    public String toString() { 
+        return rank.toString() + " of " + suit.toString();
+    }
+    
+    public static Card[] newDeck () {
+        Card[] retVal = new Card[52];
+        int cardNumber = 0;
+        for (Rank r : Rank.values()) {
+            for (Suit s : Suit.values()) {
+                retVal[cardNumber++]= new Card(s,r);
+                }
+            }
+        return retVal;
+    }
+
+    public static void main(String[] args){
+    	int count = 1;
+    	for (Card c : Card.newDeck() ) {
+    		System.out.println("#" + count++);
+    		System.out.println(c.toString());
+    	}
+    }
+}
