@@ -54,6 +54,7 @@ public class Student extends Person{
 		Student jim = new Student("jimm", 265345); //used for testing to get 3
 		System.out.println(s); // output the name and student ID of the last Student instance (i.e., "Ken, 2345"))
 		System.out.println(s.studentCount()); // output the number of Student instances constructed so far (i.e., 2)
+		//System.out.println(jim.whatEver()); //won't work if method is PRIVATE!
 	}
 
 }

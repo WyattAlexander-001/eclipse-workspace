@@ -21,6 +21,10 @@ public class Person {
 	public Person(String name) {
 		this.name = name;
 	}
+	
+	private String whatEver() {
+		return "jkkknkjkn";
+	}
 
 	/**
 	 * The main method of the {@code Person} class.
