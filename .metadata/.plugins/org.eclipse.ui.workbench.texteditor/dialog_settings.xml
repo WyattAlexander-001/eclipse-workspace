@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="data"/>
+		<item key="selection" value=""/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="array"/>
+			<item value="numEmployees"/>
 			<item value="input"/>
+			<item value="double"/>
+			<item value="float"/>
+			<item value="black"/>
+			<item value="choice"/>
+			<item value="\t"/>
+			<item value="keyboard"/>
+			<item value="array"/>
 			<item value="obj"/>
 			<item value="ctr"/>
 			<item value="student"/>
 			<item value="coolnessFactor"/>
 			<item value="Main"/>
 			<item value="SecondRangeLength"/>
-			<item value="range2"/>
-			<item value="range1"/>
-			<item value="endLimit2"/>
-			<item value="startLimit2"/>
-			<item value="endLimit1"/>
-			<item value="startLimit1"/>
-			<item value="percentageOfOverlapping"/>
 		</list>
 		<list key="replacehistory">
+			<item value="scanner"/>
+			<item value="float"/>
+			<item value="double"/>
+			<item value="userChoice"/>
+			<item value=""/>
+			<item value="input"/>
 			<item value="data"/>
 			<item value="student"/>
 			<item value="i"/>
-			<item value=""/>
 			<item value="yearHalf"/>
 			<item value="constructor_example"/>
 			<item value="secondRangeLength"/>
 			<item value="SecondRangeLength"/>
 			<item value="firstRangeLength"/>
 			<item value="secondRangeEnd"/>
-			<item value="secondRangeStart"/>
-			<item value="firstRangeEnd"/>
-			<item value="firstRangeStart"/>
-			<item value="percentOverlap"/>
-			<item value="union"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

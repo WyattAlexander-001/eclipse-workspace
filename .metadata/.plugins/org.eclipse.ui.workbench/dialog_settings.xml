@@ -3,11 +3,35 @@
 	<section name="NewWizardAction">
 	</section>
 	<section name="ImportExportAction">
-		<item key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID" value="org.eclipse.e4.ui.importer.wizard"/>
+		<item key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID" value="org.eclipse.ui.wizards.import.ZipFile"/>
+		<item key="ImportExportPage.STORE_SELECTED_EXPORT_WIZARD_ID" value="org.eclipse.ui.wizards.export.ZipFile"/>
 		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
+			<item value="org.eclipse.ui.Basic"/>
+		</list>
+		<list key="ImportExportPage.STORE_EXPANDED_EXPORT_CATEGORIES">
 			<item value="org.eclipse.ui.Basic"/>
 		</list>
 	</section>
 	<section name="FileSystemImportWizard">
+	</section>
+	<section name="ZipFileImportWizard">
+		<item key="WizardZipFileResourceImportPage1.STORE_OVERWRITE_EXISTING_RESOURCES_ID" value="false"/>
+		<list key="WizardZipFileResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="/Users/absinthe/Downloads/demo.zip"/>
+			<item value="/Users/absinthe/UAlbany_CS/UAlbany_CS_WB/SP23/DataStruc_Algo/labs/lab4/lab04.zip"/>
+			<item value="/Users/absinthe/UAlbany_CS/UAlbany_CS_WB/SP23/DataStruc_Algo/labs/lab3/lab03.zip"/>
+			<item value="/Users/absinthe/Documents/UAlbany/SP23/DataStruc_Algo/labs/lab2/lab02.zip"/>
+			<item value="/Users/absinthe/Documents/UAlbany/SP23/DataStruc_Algo/labs/lab01.zip"/>
+		</list>
+	</section>
+	<section name="ZipFileExportWizard">
+		<item key="WizardZipFileResourceExportPage1.STORE_CREATE_STRUCTURE_ID" value="true"/>
+		<item key="WizardZipFileResourceExportPage1.STORE_COMPRESS_CONTENTS_ID" value="true"/>
+		<list key="WizardZipFileResourceExportPage1.STORE_DESTINATION_NAMES_ID">
+			<item value="/Users/absinthe/UAlbany_CS/UAlbany_CS_WB/SP23/DataStruc_Algo/LabZips/Untitled.zip"/>
+			<item value="/Users/absinthe/UAlbany_CS/UAlbany_CS_WB/SP23/DataStruc_Algo/labs/lab3/Wyatt_Bushman_Lab3.zip"/>
+			<item value="/Users/absinthe/Documents/UAlbany/SP23/DataStruc_Algo/labs/WyattBushmanLab3.zip"/>
+			<item value="/Users/absinthe/Documents/UAlbany/SP23/DataStruc_Algo/labs/lab2/Wyatt_Bushman.zip"/>
+		</list>
 	</section>
 </section>

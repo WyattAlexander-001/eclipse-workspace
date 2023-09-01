@@ -14,9 +14,10 @@
 	</section>
 	<section name="OptionalMessageDialog.hide.">
 		<item key="org.eclipse.jdt.ui.typecomment.deprecated" value="true"/>
+		<item key="configure_problem_severity_dialog_id" value="false"/>
 	</section>
 	<section name="NewClassWizardPage">
-		<item key="create_constructor" value="false"/>
+		<item key="create_constructor" value="true"/>
 		<item key="create_unimplemented" value="true"/>
 	</section>
 	<section name="completion_proposal_size">
@@ -47,38 +48,43 @@
 		<item key="nonavbar" value="false"/>
 		<item key="openinbrowser" value="false"/>
 		<item key="source" value="17"/>
-		<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab6/javadoc.xml"/>
-		<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab6/doc"/>
+		<item key="antpath" value="/Users/absinthe/eclipse-workspace/csi213/javadoc.xml"/>
+		<item key="destdir" value="/Users/absinthe/eclipse-workspace/csi213/doc"/>
 		<section name="projects">
-			<section name="Inheritance_Example">
+			<section name="File_Writer">
 				<item key="href" value=""/>
-				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Inheritance_Example/doc"/>
-				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Inheritance_Example/javadoc.xml"/>
-			</section>
-			<section name="LabProgram">
-				<item key="href" value=""/>
-				<item key="destdir" value="/Users/absinthe/eclipse-workspace/LabProgram/doc"/>
-				<item key="antpath" value="/Users/absinthe/eclipse-workspace/LabProgram/javadoc.xml"/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/File_Writer/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/File_Writer/javadoc.xml"/>
 			</section>
 			<section name="Test">
 				<item key="href" value=""/>
 				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Test/doc"/>
 				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Test/javadoc.xml"/>
 			</section>
-			<section name="Bushman_Wyatt_Lab0">
+			<section name="Bushman_Wyatt_Project2">
 				<item key="href" value=""/>
-				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab0/doc"/>
-				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab0/javadoc.xml"/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Project2/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Project2/javadoc.xml"/>
+			</section>
+			<section name="OurFirstGUI">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/OurFirstGUI/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/OurFirstGUI/javadoc.xml"/>
+			</section>
+			<section name="csi213">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/csi213/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/csi213/javadoc.xml"/>
+			</section>
+			<section name="Zylab_Drop_Student">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Zylab_Drop_Student/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Zylab_Drop_Student/javadoc.xml"/>
 			</section>
 			<section name="Bushman_Wyatt_Lab2">
 				<item key="href" value=""/>
 				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab2/doc"/>
 				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab2/javadoc.xml"/>
-			</section>
-			<section name="Bushman_Wyatt_Lab4">
-				<item key="href" value=""/>
-				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab4/doc"/>
-				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab4/javadoc.xml"/>
 			</section>
 			<section name="Bushman_Wyatt_Zylab">
 				<item key="href" value=""/>
@@ -90,10 +96,20 @@
 				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab6/doc"/>
 				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab6/javadoc.xml"/>
 			</section>
+			<section name="Example_Array">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Example_Array/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Example_Array/javadoc.xml"/>
+			</section>
 			<section name="Payroll">
 				<item key="href" value=""/>
 				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Payroll/doc"/>
 				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Payroll/javadoc.xml"/>
+			</section>
+			<section name="ExceptionHandling">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/ExceptionHandling/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/ExceptionHandling/javadoc.xml"/>
 			</section>
 			<section name="Construction">
 				<item key="href" value=""/>
@@ -110,15 +126,10 @@
 				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Project1/doc"/>
 				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Project1/javadoc.xml"/>
 			</section>
-			<section name="OOPisFun">
+			<section name="Personal_Project_Java_Banking_App">
 				<item key="href" value=""/>
-				<item key="destdir" value="/Users/absinthe/eclipse-workspace/OOPisFun/doc"/>
-				<item key="antpath" value="/Users/absinthe/eclipse-workspace/OOPisFun/javadoc.xml"/>
-			</section>
-			<section name="Rectangle">
-				<item key="href" value=""/>
-				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Rectangle/doc"/>
-				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Rectangle/javadoc.xml"/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Personal_Project_Java_Banking_App/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Personal_Project_Java_Banking_App/javadoc.xml"/>
 			</section>
 			<section name="Bushman_Wyatt_Lab5">
 				<item key="href" value=""/>
@@ -130,10 +141,100 @@
 				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab1/doc"/>
 				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab1/javadoc.xml"/>
 			</section>
+			<section name="Bushman_Wyatt_Lab9">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab9/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab9/javadoc.xml"/>
+			</section>
+			<section name="Zylabs_Pet_Information">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Zylabs_Pet_Information/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Zylabs_Pet_Information/javadoc.xml"/>
+			</section>
+			<section name="Inheritance_Example">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Inheritance_Example/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Inheritance_Example/javadoc.xml"/>
+			</section>
+			<section name="JOB_READY_JAVA">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/JOB_READY_JAVA/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/JOB_READY_JAVA/javadoc.xml"/>
+			</section>
+			<section name="SnakeGame">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/SnakeGame/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/SnakeGame/javadoc.xml"/>
+			</section>
+			<section name="Compound_Interest">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Compound_Interest/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Compound_Interest/javadoc.xml"/>
+			</section>
+			<section name="LabProgram">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/LabProgram/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/LabProgram/javadoc.xml"/>
+			</section>
+			<section name="Bushman_Wyatt_Lab0">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab0/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab0/javadoc.xml"/>
+			</section>
+			<section name="Bushman_Wyatt_Lab4">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab4/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab4/javadoc.xml"/>
+			</section>
+			<section name="Bushman_Wyatt_Lab8">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab8/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab8/javadoc.xml"/>
+			</section>
+			<section name="File_Reader">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/File_Reader/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/File_Reader/javadoc.xml"/>
+			</section>
+			<section name="Zylab_Instrument_Info">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Zylab_Instrument_Info/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Zylab_Instrument_Info/javadoc.xml"/>
+			</section>
+			<section name="Bushman_Wyatt_Project3">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Project3/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Project3/javadoc.xml"/>
+			</section>
+			<section name="OOPisFun">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/OOPisFun/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/OOPisFun/javadoc.xml"/>
+			</section>
+			<section name="Bushman_Wyatt_Lab_10">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab_10/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab_10/javadoc.xml"/>
+			</section>
+			<section name="Rectangle">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Rectangle/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Rectangle/javadoc.xml"/>
+			</section>
 			<section name="Bushman_Wyatt_Lab3">
 				<item key="href" value=""/>
 				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab3/doc"/>
 				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab3/javadoc.xml"/>
+			</section>
+			<section name="Bushman_Wyatt_Lab7">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab7/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Bushman_Wyatt_Lab7/javadoc.xml"/>
+			</section>
+			<section name="Personal_Project_Java_Calculator">
+				<item key="href" value=""/>
+				<item key="destdir" value="/Users/absinthe/eclipse-workspace/Personal_Project_Java_Calculator/doc"/>
+				<item key="antpath" value="/Users/absinthe/eclipse-workspace/Personal_Project_Java_Calculator/javadoc.xml"/>
 			</section>
 		</section>
 	</section>
@@ -159,5 +260,23 @@
 	</section>
 	<section name="WorkingSetModelAwareSelectionDialog">
 		<item key="ShowVisibleOnly" value="true"/>
+	</section>
+	<section name="org.eclipse.jdt.internal.ui.dialogs.FilteredTypesSelectionDialog">
+		<item key="ShowStatusLine" value="true"/>
+		<item key="History" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0A;&lt;History/&gt;"/>
+		<section name="DialogBoundsSettings">
+			<item key="DIALOG_HEIGHT" value="500"/>
+			<item key="DIALOG_WIDTH" value="600"/>
+			<item key="DIALOG_X_ORIGIN" value="-7"/>
+			<item key="DIALOG_Y_ORIGIN" value="-40"/>
+			<item key="DIALOG_FONT_NAME" value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont"/>
+		</section>
+	</section>
+	<section name="RefactoringWizard.preview">
+		<item key="width" value="600"/>
+		<item key="height" value="400"/>
+	</section>
+	<section name="SelfEncapsulateFieldWizard">
+		<item key="GenerateJavadoc" value="false"/>
 	</section>
 </section>
