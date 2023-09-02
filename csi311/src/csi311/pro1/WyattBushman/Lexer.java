@@ -50,7 +50,7 @@ public class Lexer {
         }
     }
     
-    private Token processWord() {
+    public Token processWord() {
         StringBuilder wordBuilder = new StringBuilder();
         while (!stringHandler.isDone() && (Character.isLetter(stringHandler.peek(0)) || Character.isDigit(stringHandler.peek(0)) || stringHandler.peek(0) == '_')) {
             wordBuilder.append(stringHandler.getChar());
@@ -59,7 +59,7 @@ public class Lexer {
         return new Token(TokenType.WORD, wordBuilder.toString(), lineNumber, position - wordBuilder.length());
     }
 
-    private Token processNumber() {
+    public Token processNumber() {
         StringBuilder numberBuilder = new StringBuilder();
         boolean hasDot = false;
         while (!stringHandler.isDone() && (Character.isDigit(stringHandler.peek(0)) || (stringHandler.peek(0) == '.' && !hasDot))) {

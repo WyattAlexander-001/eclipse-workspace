@@ -54,6 +54,14 @@ public class LexerTest {
         Lexer lexer = new Lexer(stringHandler);
         lexer.Lex(); //Purposely did not use try/catch to avoid JUnit's built in exception handling
     }
+    
+    @Test(expected = Throwable.class)
+    public void testIncorrectChar() {
+        String input = "#";
+        StringHandler stringHandler = new StringHandler(input);
+        Lexer lexer = new Lexer(stringHandler);
+        lexer.Lex(); 
+    }
 
 
     @Test
@@ -78,9 +86,65 @@ public class LexerTest {
         String input = "\n";
         Lexer lexer = new Lexer(new StringHandler(input));
         lexer.Lex();
-        List<Token> tokens = lexer.getTokens();
-        
+        List<Token> tokens = lexer.getTokens();        
         assertEquals(TokenType.SEPARATOR, tokens.get(0).getType());
     }
+    
+   
+    @Test
+    public void testProcessWord() {
+        StringHandler handler = new StringHandler("hello", false);
+        Lexer lexer = new Lexer(handler);
+        Token result = lexer.processWord();
+        assertEquals(TokenType.WORD, result.getType());
+        assertEquals("hello", result.getValue());
+    }
+    
+    @Test
+    public void testProcessWordWithSpaces() {
+        StringHandler handler = new StringHandler("hello Wyatt t h e r e are alot of Sp ac es", false);
+        Lexer lexer = new Lexer(handler);
+        Token result = lexer.processWord();
+        assertEquals(TokenType.WORD, result.getType());
+        assertEquals("hello", result.getValue());
+    }
+
+    @Test
+    public void testProcessWordWithNumbers() {
+        StringHandler handler = new StringHandler("hello123", false);
+        Lexer lexer = new Lexer(handler);
+        Token result = lexer.processWord();
+        assertEquals(TokenType.WORD, result.getType());
+        assertEquals("hello123", result.getValue());
+    }
+
+    @Test
+    public void testProcessNumberWithDecimal() {
+        StringHandler handler = new StringHandler("123.45", false);
+        Lexer lexer = new Lexer(handler);
+        Token result = lexer.processNumber();
+        assertEquals(TokenType.NUMBER, result.getType());
+        assertEquals("123.45", result.getValue());
+    }
+
+    @Test
+    public void testProcessNumberNoDecimal() {
+        StringHandler handler = new StringHandler("123", false);
+        Lexer lexer = new Lexer(handler);
+        Token result = lexer.processNumber();
+        assertEquals(TokenType.NUMBER, result.getType());
+        assertEquals("123", result.getValue());
+    }
+
+    @Test
+    public void testProcessNumberMultipleDecimals() {
+        StringHandler handler = new StringHandler("123.45.67", false);
+        Lexer lexer = new Lexer(handler);
+        Token result = lexer.processNumber();
+        assertEquals(TokenType.NUMBER, result.getType());
+        assertEquals("123.45", result.getValue());  // Assuming the lexer stops at the second decimal point
+    }
+    
+    
 
 }

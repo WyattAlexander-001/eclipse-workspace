@@ -20,7 +20,6 @@ public class StringHandler {
         } else {
             this.AWKFile = input;
         }
-        
         this.index = 0; // Strings start indexing at 0
     }
     
@@ -78,6 +77,10 @@ public class StringHandler {
     
     public int getLength() {
         return AWKFile.length();
+    }
+    
+    public int getIndex() {
+        return this.index;
     }
 
 }
