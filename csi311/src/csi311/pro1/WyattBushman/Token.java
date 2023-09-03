@@ -63,7 +63,7 @@ public class Token {
         if (value != null && !value.isEmpty()) {
             result += " Value: " + getValue();
         }
-        result += " Line: " + getLineNumber() + " Position: " + getPosition();
+        result += " || Line: " + getLineNumber() + " || Position: " + getPosition() + "\n";
         return result;
 	}
 

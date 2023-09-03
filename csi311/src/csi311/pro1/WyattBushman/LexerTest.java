@@ -145,6 +145,45 @@ public class LexerTest {
         assertEquals("123.45", result.getValue());  // Assuming the lexer stops at the second decimal point
     }
     
+    @Test
+    public void testRemainderAtStart() {
+        StringHandler handler = new StringHandler("Hello", false);
+        assertEquals("Hello", handler.remainder());
+    }
+
+    @Test
+    public void testRemainderInMiddle() {
+        StringHandler handler = new StringHandler("Hello", false);
+        handler.swallow(2);  // Move index to 2
+        assertEquals("llo", handler.remainder());
+    }
+
+    @Test
+    public void testRemainderAtEnd() {
+        StringHandler handler = new StringHandler("Hello", false);
+        handler.swallow(10);  // Move index to 10
+        assertEquals("", handler.remainder());
+    }
+    
+    @Test
+    public void testGetLength() {
+        StringHandler handler = new StringHandler("Hello", false);
+        assertEquals(5, handler.getLength());
+    }
+    
+    @Test
+    public void testGetIndex() {
+        StringHandler handler = new StringHandler("Hello", false);
+        assertEquals(0, handler.getIndex());
+        
+        handler.swallow(2);  // Move index to 2
+        assertEquals(2, handler.getIndex());
+        
+        handler.swallow(3);  // Move index to 5
+        assertEquals(5, handler.getIndex());
+    }
+
+    
     
 
 }

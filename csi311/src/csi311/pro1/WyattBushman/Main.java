@@ -10,7 +10,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		System.out.println("Current Directory: " + new File("").getAbsolutePath() + "\n");
-	    String content = readFileContent("testFile.awk");
+	    String content = FileUtils.readFileContent("resources","testFile.awk");
 	    StringHandler stringHandler = new StringHandler(content);
 	    Lexer lexer = new Lexer(stringHandler);
 	    
@@ -25,18 +25,4 @@ public class Main {
 	        System.out.println(token);
 	    }
 	}
-	
-	//Dump your files in the resource folder!
-	private static String readFileContent(String filename) {
-	    try {
-	        Path filePath = Paths.get("resources", filename);
-	        String content = new String(Files.readAllBytes(filePath));
-	        return content;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        throw new RuntimeException("Error reading file: " + filename);
-	    }
-	}
-
-
 }

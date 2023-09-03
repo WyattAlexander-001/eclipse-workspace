@@ -94,4 +94,74 @@ public class StringHandlerTest {
         assertEquals('\0', result);
         assertEquals(3, handler.getIndex());
     }
+    
+    @Test
+    public void testSwallowWithinBounds() {
+        StringHandler handler = new StringHandler("Test", false);
+        handler.swallow(2);
+        assertEquals(2, handler.getIndex());
+    }
+
+    @Test
+    public void testSwallowExactLength() {
+        StringHandler handler = new StringHandler("Test", false);
+        handler.swallow(4);
+        assertEquals(4, handler.getIndex());
+    }
+
+    @Test
+    public void testSwallowOutOfBounds() {
+        StringHandler handler = new StringHandler("Test", false);
+        handler.swallow(5);
+        assertEquals(4, handler.getIndex());// Should not exceed string length
+    }
+    
+    @Test
+    public void testSwallowZero() {
+        StringHandler handler = new StringHandler("Test", false);
+        handler.swallow(0);
+        assertEquals(0, handler.getIndex());  // No change in index
+    }
+
+    @Test
+    public void testSwallowWithEmptyHandler() {
+        StringHandler handler = new StringHandler("", false);
+        handler.swallow(1);
+        assertEquals(0, handler.getIndex());  // Should not advance index since the string is empty
+    }
+    
+    @Test
+    public void testIsDoneEmptyString() {
+        StringHandler handler = new StringHandler("", false);
+        assertEquals(true, handler.isDone());
+    }
+
+    @Test
+    public void testIsDoneAtStart() {
+        StringHandler handler = new StringHandler("Test", false);
+        assertEquals(false,handler.isDone());
+    }
+
+    @Test
+    public void testIsDoneInMiddle() {
+        StringHandler handler = new StringHandler("Test", false);
+        handler.swallow(2);  // Move index to 2
+        assertEquals(false,handler.isDone());
+    }
+
+    @Test
+    public void testIsDoneAtEnd() {
+        StringHandler handler = new StringHandler("Test", false);
+        handler.swallow(4);  // Move index to 4 which is >= index
+        assertEquals(true,handler.isDone());
+    }
+    
+    @Test
+    public void testIsDoneAtEndIndex() {
+        StringHandler handler = new StringHandler("Test", false);
+        handler.swallow(3);  // Move index to 3, which is less than the string length (4)
+        assertEquals(false,handler.isDone());
+    }
+    
+    
 }
