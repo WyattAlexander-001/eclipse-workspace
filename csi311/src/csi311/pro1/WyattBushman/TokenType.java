@@ -1,59 +1,75 @@
-/**
- * 
- */
 package csi311.pro1.WyattBushman;
 
-public enum TokenType {
-	
-    //Basic Ones For Project 1. Will use only these
-	WORD,
+public enum TokenType {   
+    WORD,
     NUMBER,
     SEPARATOR,
-    
-    //Common Programming Element Keywords
-    IF,
-    ELSE,
+
+    // Common Programming Element Keywords
     WHILE,
+    IF,
+    DO,
     FOR,
+    BREAK,
+    CONTINUE,
+    ELSE,
+    RETURN,
+    BEGIN,
+    END,
+    PRINT,
+    PRINTF,
+    NEXT,
+    IN,
+    DELETE,
+    GETLINE,
+    EXIT,
+    NEXTFILE,
     FUNCTION,
-    ENUM,
-    VAR,
-    ARR,
-    BOOL,
+
+    // Literal Types
+    STRINGLITERAL,
+    PATTERN,
+
+    // Two-character symbols
+    GT_EQ,  // >=
+    INC,    // ++
+    DEC,    // --
+    LT_EQ,  // <=
+    EQ_EQ,  // ==
+    NOT_EQ, // !=
+    POW,    // ^=
+    MOD_ASSIGN, // %=
+    MUL_ASSIGN, // *=
+    DIV_ASSIGN, // /=
+    PLUS_ASSIGN, // +=
+    MINUS_ASSIGN, // -=
+    NOT_MATCH,    // !~
+    AND,          // &&
+    APPEND,       // >>
+    OR,           // ||
+
     
-    //Operators
-    PLUS,
-    MINUS,
-    MULT,
-    DIV,
-    MOD,
-    EQUALS,
-    EQUALITY, // ==
-    NOT_EQUALS,
-    LESS_THAN,
-    GREATER_THAN,
-    LESS_THAN_OR_EQUAL,
-    GREATER_THAN_OR_EQUAL,
-    AND,
-    OR,
-    XOR,
-    NOT,
-    CONCAT,
-    
-    // Separators
-    OPEN_PAREN,    
-    CLOSE_PAREN,    
-    OPEN_BRACE,       
-    CLOSE_BRACE,     
-    COMMA,
-    COLON,
-    SEMICOLON,        
-    SQUARE_OPEN,      
-    SQUARE_CLOSE,
-    DOT,
-    
-    // Comments
-    SINGLE_LINE_COMMENT,   
-    MULTI_LINE_COMMENT, 
-    
+    // Single-character symbols
+    OPEN_CURLY,  // {
+    CLOSE_CURLY, // }
+    OPEN_SQUARE, // [
+    CLOSE_SQUARE,// ]
+    OPEN_PAREN,  // (
+    CLOSE_PAREN, // )
+    DOLLAR,      // $
+    MATCH,       // ~
+    ASSIGNMENT,  // =
+    LT,          // <
+    GT,          // >
+    NOT,         // !
+    PLUS,        // +
+    EXPONENT,    // ^ (since ^ is also used in two-character symbols)
+    MINUS,       // -
+    QUESTION,    // ?
+    COLON,       // :
+    ASTERISK,    // *
+    DIVIDE,      // /
+    MODULO,      // %
+    PIPE,        // |
+    COMMA        // ,
 }

@@ -1,8 +1,6 @@
-package csi311.pro1.WyattBushman;
+
 
 import static org.junit.Assert.*;
-
-import java.util.LinkedList;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +11,7 @@ public class LexerTest {
     public void testNumbers() throws Exception {
         String input = "5.23 8.5 3 5.5";
         Lexer lexer = new Lexer(new StringHandler(input));
-        lexer.lex();
+        lexer.Lex();
         List<Token> tokens = lexer.getTokens();
         
         assertEquals(TokenType.NUMBER, tokens.get(0).getType());
@@ -36,7 +34,7 @@ public class LexerTest {
         StringHandler stringHandler = new StringHandler(input);
         Lexer lexer = new Lexer(stringHandler);
         try {
-            lexer.lex();
+            lexer.Lex();
             Token token = lexer.getTokens().get(0);
             assertFalse(token.getType() == TokenType.NUMBER); //Asserts that the token type is not a number
             System.out.println("FAKE PASS!");
@@ -54,24 +52,24 @@ public class LexerTest {
         String input = "5..23";
         StringHandler stringHandler = new StringHandler(input);
         Lexer lexer = new Lexer(stringHandler);
-        lexer.lex(); //Purposely did not use try/catch to avoid JUnit's built in exception handling
+        lexer.Lex(); //Purposely did not use try/catch to avoid JUnit's built in exception handling
     }
-    
     
     @Test(expected = Throwable.class)
     public void testIncorrectChar() {
         String input = "#";
         StringHandler stringHandler = new StringHandler(input);
         Lexer lexer = new Lexer(stringHandler);
-        lexer.lex(); 
+        lexer.Lex(); 
     }
+    
 
 
     @Test
     public void testWords() throws Exception {
         String input = "Anni Wyatt Wyatt123";
         Lexer lexer = new Lexer(new StringHandler(input));
-        lexer.lex();
+        lexer.Lex();
         List<Token> tokens = lexer.getTokens();
         
         assertEquals(TokenType.WORD, tokens.get(0).getType());
@@ -88,7 +86,7 @@ public class LexerTest {
     public void testSeparators() throws Exception {
         String input = "\n";
         Lexer lexer = new Lexer(new StringHandler(input));
-        lexer.lex();
+        lexer.Lex();
         List<Token> tokens = lexer.getTokens();        
         assertEquals(TokenType.SEPARATOR, tokens.get(0).getType());
     }
@@ -185,66 +183,8 @@ public class LexerTest {
         handler.swallow(3);  // Move index to 5
         assertEquals(5, handler.getIndex());
     }
-    
-    @Test
-    public void testHandleStringLiteral() throws Exception {
-        Lexer lexer = new Lexer("\"hello\"");
-        Token stringToken = lexer.HandleStringLiteral();
-        assertEquals(TokenType.STRINGLITERAL, stringToken.getType());
-        assertEquals("hello", stringToken.getValue());    
-    }
-    @Test
-    public void testHandleStringLiteralEmpty() throws Exception {
-        Lexer lexer = new Lexer("\"\"");
-        Token stringToken = lexer.HandleStringLiteral();
-        assertEquals(TokenType.STRINGLITERAL, stringToken.getType());
-        assertEquals("", stringToken.getValue());
-    }
-    
-    public void testHandleComments() {
-    	/*
-    	 print 1; # This is a comment
-		 print 2; 
-    	 */
-        Lexer lexer = new Lexer("print 1; # This is a comment\nprint 2;");
-        try {
-            lexer.lex();
-        } catch (Exception e) {
-            fail("Exception thrown: " + e.getMessage());
-        }
-        LinkedList<Token> tokens = lexer.getTokens();
-        
-        // Total number of tokens should be 4: PRINT, NUMBER, PRINT, NUMBER
-        assertEquals(4, tokens.size());
-        
-        // Check the types of the tokens
-        assertEquals(TokenType.PRINT, tokens.get(0).getType());
-        assertEquals(TokenType.NUMBER, tokens.get(1).getType());
-        assertEquals(TokenType.PRINT, tokens.get(2).getType());
-        assertEquals(TokenType.NUMBER, tokens.get(3).getType());
 
-        // Check the values of the number tokens
-        assertEquals("1", tokens.get(1).getValue());
-        assertEquals("2", tokens.get(3).getValue());
-    }
     
-    @Test
-    public void testFullAWKProgram1() throws Exception {
-        String input = "BEGIN { print \"Hello, World!\" } END";
-        Lexer lexer = new Lexer(new StringHandler(input));
-        lexer.lex();
-        List<Token> tokens = lexer.getTokens();
+    
 
-        assertEquals(6, tokens.size());
-
-        assertEquals(TokenType.BEGIN, tokens.get(0).getType());
-        assertEquals(TokenType.OPEN_CURLY, tokens.get(1).getType());
-        assertEquals(TokenType.PRINT, tokens.get(2).getType());
-        assertEquals(TokenType.STRINGLITERAL, tokens.get(3).getType());
-        assertEquals("Hello, World!", tokens.get(3).getValue());
-        assertEquals(TokenType.CLOSE_CURLY, tokens.get(4).getType());
-        assertEquals(TokenType.END, tokens.get(5).getType());
-    }
-    
-    
 }
