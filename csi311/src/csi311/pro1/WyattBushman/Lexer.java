@@ -134,11 +134,11 @@ public class Lexer {
 	                position++;
 	                break;
 	            case '"':
-	                Token stringToken = HandleStringLiteral();
+	                Token stringToken = handleStringLiteral();
 	                tokens.add(stringToken);
 	                break;
 	            case '`':
-	                Token patternToken = HandlePattern();
+	                Token patternToken = handlePattern();
 	                tokens.add(patternToken);
 	                break;
 	            default:
@@ -149,11 +149,10 @@ public class Lexer {
 	                    Token numberToken = processNumber();
 	                    tokens.add(numberToken);
 	                } else {
-	                    // Calling processSymbol() here
 	                    Token symbolToken = processSymbol(lineNumber, position);
 	                    if (symbolToken != null) {
 	                        tokens.add(symbolToken);
-	                        position = symbolToken.getPosition(); // update position from the symbolToken
+	                        position = symbolToken.getPosition();
 	                        break;
 	                    }
 	                    throw new Exception("Unexpected character: " + currentChar);
@@ -174,17 +173,13 @@ public class Lexer {
             wordBuilder.append(stringHandler.getChar());
             position++;
         }
-
         String word = wordBuilder.toString();
-        
         // Check if the word is a keyword
         if (keywords.containsKey(word)) {
             return new Token(keywords.get(word), lineNumber, position - word.length());
         }
-        
         return new Token(TokenType.WORD, word, lineNumber, position - word.length());
     }
-
 
     public Token processNumber() {
         StringBuilder numberBuilder = new StringBuilder();
@@ -216,10 +211,8 @@ public class Lexer {
         
         return null;
     }
-
-    
-    
-    public Token HandleStringLiteral() throws Exception {
+ 
+    public Token handleStringLiteral() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         int startPos = position; 
         stringHandler.swallow(1);
@@ -231,7 +224,6 @@ public class Lexer {
                 stringHandler.swallow(1); 
                 position++; 
                 c = stringHandler.peek(0);
-                // You could handle other escape characters like \t, \b, etc. here.
                 if (c == 'n') {
                     c = '\n';
                 } else if (c == 't') {
@@ -239,7 +231,6 @@ public class Lexer {
                 } else if (c == '"') {
                     c = '"';
                 }
-                // Add more cases for other escape sequences if necessary.
             } else if (c == '"') {
                 stringHandler.swallow(1);
                 position++;
@@ -256,11 +247,11 @@ public class Lexer {
 
 
     
-    public Token HandlePattern() {
+    public Token handlePattern() {
         StringBuilder stringBuilder = new StringBuilder();
         int startPos = position;
         stringHandler.swallow(1);
-        position++; // Advance the position
+        position++; 
         
         while (true) {
             char c = stringHandler.peek(0);
@@ -279,7 +270,7 @@ public class Lexer {
             
             stringBuilder.append(c);
             stringHandler.swallow(1);
-            position++; // Advance the position
+            position++; 
         }
         return new Token(TokenType.PATTERN, stringBuilder.toString(), lineNumber, startPos);
     }

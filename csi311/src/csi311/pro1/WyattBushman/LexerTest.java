@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
 
 public class LexerTest {
@@ -45,9 +44,7 @@ public class LexerTest {
         	System.out.println("EXPECTED FAIL!");
         	assertEquals("Unexpected character: .", e.getMessage()); 
         }
-    }
-    
-    
+    }  
     //Test to ensure Lexer throws an exception for invalid number format (e.g., "5..23").
     @Test(expected = Throwable.class)
     public void testIncorrectNumbers() {
@@ -56,8 +53,7 @@ public class LexerTest {
         Lexer lexer = new Lexer(stringHandler);
         lexer.lex(); //Purposely did not use try/catch to avoid JUnit's built in exception handling
     }
-    
-    
+ 
     @Test(expected = Throwable.class)
     public void testIncorrectChar() {
         String input = "#";
@@ -65,8 +61,7 @@ public class LexerTest {
         Lexer lexer = new Lexer(stringHandler);
         lexer.lex(); 
     }
-
-
+    
     @Test
     public void testWords() throws Exception {
         String input = "Anni Wyatt Wyatt123";
@@ -145,8 +140,43 @@ public class LexerTest {
         Lexer lexer = new Lexer(handler);
         Token result = lexer.processNumber();
         assertEquals(TokenType.NUMBER, result.getType());
-        assertEquals("123.45", result.getValue());  // Assuming the lexer stops at the second decimal point
+        assertEquals("123.45", result.getValue()); 
     }
+    
+    @Test
+    public void testProcessSymbolSingleCharGT() {
+        String input = ">"; 
+        Lexer lexer = new Lexer(new StringHandler(input));
+        Token token = lexer.processSymbol(1, 0);
+        assertEquals(TokenType.GT, token.getType()); 
+        assertEquals(1, token.getPosition());
+    }
+    @Test
+    public void testProcessSymbolSingleCharNot() {
+        String input = "!"; 
+        Lexer lexer = new Lexer(new StringHandler(input));
+        Token token = lexer.processSymbol(1, 0);
+        assertEquals(TokenType.NOT, token.getType()); 
+        assertEquals(1, token.getPosition());
+    }
+    @Test
+    public void testProcessSymbolDoubleCharNotEQ() {
+        String input = "!=";
+        Lexer lexer = new Lexer(new StringHandler(input));
+        Token token = lexer.processSymbol(1, 0);
+        assertEquals(TokenType.NOT_EQ, token.getType());
+        assertEquals(2, token.getPosition());
+    }
+    
+    @Test
+    public void testProcessSymbolDoubleCharAnd() {
+        String input = "&&";
+        Lexer lexer = new Lexer(new StringHandler(input));
+        Token token = lexer.processSymbol(1, 0);
+        assertEquals(TokenType.AND, token.getType());
+        assertEquals(2, token.getPosition());
+    }
+
     
     @Test
     public void testRemainderAtStart() {
@@ -189,14 +219,14 @@ public class LexerTest {
     @Test
     public void testHandleStringLiteral() throws Exception {
         Lexer lexer = new Lexer("\"hello\"");
-        Token stringToken = lexer.HandleStringLiteral();
+        Token stringToken = lexer.handleStringLiteral();
         assertEquals(TokenType.STRINGLITERAL, stringToken.getType());
         assertEquals("hello", stringToken.getValue());    
     }
     @Test
     public void testHandleStringLiteralEmpty() throws Exception {
         Lexer lexer = new Lexer("\"\"");
-        Token stringToken = lexer.HandleStringLiteral();
+        Token stringToken = lexer.handleStringLiteral();
         assertEquals(TokenType.STRINGLITERAL, stringToken.getType());
         assertEquals("", stringToken.getValue());
     }
@@ -246,5 +276,18 @@ public class LexerTest {
         assertEquals(TokenType.END, tokens.get(5).getType());
     }
     
-    
+    @Test
+    public void testHandlePatternIndirectly() throws Exception {
+        String input = "something `pattern` something";
+        Lexer lexer = new Lexer(new StringHandler(input));
+        lexer.lex();
+        List<Token> tokens = lexer.getTokens();
+        Token patternToken = tokens.get(1);
+
+        assertEquals(TokenType.PATTERN, patternToken.getType());
+        assertEquals("pattern", patternToken.getValue());
+        assertEquals(1, patternToken.getLineNumber()); 
+        assertEquals(10, patternToken.getPosition());
+    }
+
 }

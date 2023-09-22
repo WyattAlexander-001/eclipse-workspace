@@ -25,7 +25,8 @@ public class Token {
         this.position = position;
         this.value = null; // No value for this token
     }
-
+    
+    //May need to remove this for immutability
 	public void setValue(String v) {
 		this.value = v;
 	}
