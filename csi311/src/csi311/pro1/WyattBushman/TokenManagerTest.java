@@ -63,4 +63,79 @@ public class TokenManagerTest {
     public void testMatchAndRemoveEmptyList() {
         assertFalse(tokenManager.MatchAndRemove(TokenType.WORD).isPresent());
     }
+    
+    @Test
+    public void testConsecutiveSimilarTokens() {
+        tokens.add(new Token(TokenType.WORD, "test1", 1, 1));
+        tokens.add(new Token(TokenType.WORD, "test2", 1, 2));
+        assertEquals("test1", tokenManager.MatchAndRemove(TokenType.WORD).get().getValue());
+        assertTrue(tokenManager.MoreTokens());
+        assertEquals("test2", tokenManager.MatchAndRemove(TokenType.WORD).get().getValue());
+        assertFalse(tokenManager.MoreTokens());
+    }
+    
+    @Test
+    public void testDifferentTokenTypes() {
+        tokens.add(new Token(TokenType.WORD, "test", 1, 1));
+        tokens.add(new Token(TokenType.NUMBER, "123", 1, 2));
+        assertEquals(TokenType.WORD, tokenManager.MatchAndRemove(TokenType.WORD).get().getType());
+        assertEquals(TokenType.NUMBER, tokenManager.MatchAndRemove(TokenType.NUMBER).get().getType());
+        assertFalse(tokenManager.MoreTokens());
+    }
+    
+    @Test
+    public void testPeekAtDifferentIndices() {
+        tokens.add(new Token(TokenType.WORD, "test1", 1, 1));
+        tokens.add(new Token(TokenType.WORD, "test2", 1, 2));
+        assertEquals("test1", tokenManager.Peek(0).get().getValue());
+        assertEquals("test2", tokenManager.Peek(1).get().getValue());
+    }
+    
+    @Test
+    public void testRemoveFromMiddle() {
+        tokens.add(new Token(TokenType.WORD, "test1", 1, 1));
+        tokens.add(new Token(TokenType.NUMBER, "123", 1, 2));
+        tokens.add(new Token(TokenType.WORD, "test2", 1, 3));
+        
+        assertEquals(TokenType.WORD, tokenManager.MatchAndRemove(TokenType.WORD).get().getType());
+        assertEquals(TokenType.NUMBER, tokenManager.MatchAndRemove(TokenType.NUMBER).get().getType());
+        assertEquals("test2", tokenManager.Peek(0).get().getValue());
+    }
+    
+    @Test
+    public void testPeekAtLastPosition() {
+        tokens.add(new Token(TokenType.WORD, "test1", 1, 1));
+        tokens.add(new Token(TokenType.NUMBER, "123", 1, 2));
+        tokens.add(new Token(TokenType.WORD, "test2", 1, 3));
+        assertEquals("test2", tokenManager.Peek(2).get().getValue());
+    }
+
+    @Test
+    public void testRemoveLastToken() {
+        tokens.add(new Token(TokenType.WORD, "test1", 1, 1));
+        tokens.add(new Token(TokenType.NUMBER, "123", 1, 2));
+        tokens.add(new Token(TokenType.WORD, "test2", 1, 3));
+        tokenManager.MatchAndRemove(TokenType.WORD); // Removes "test1"
+        tokenManager.MatchAndRemove(TokenType.NUMBER); // Removes "123"
+        assertEquals(TokenType.WORD, tokenManager.MatchAndRemove(TokenType.WORD).get().getType());
+        assertFalse(tokenManager.MoreTokens());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testMatchAndRemoveNullToken() {
+        tokens.add(new Token(TokenType.WORD, "test", 1, 1));
+        tokenManager.MatchAndRemove(null);
+    }
+
+    @Test
+    public void testPeekWithNegativeIndex() {
+        tokens.add(new Token(TokenType.WORD, "test", 1, 1));
+        assertFalse(tokenManager.Peek(-1).isPresent());
+    }
+
+
+
+
+
+
 }

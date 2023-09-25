@@ -1,4 +1,5 @@
 package csi311.pro1.WyattBushman;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Optional;
@@ -29,6 +30,10 @@ public class BlockNode extends Node {
             throw new IllegalArgumentException("Statement cannot be null");
         }
         statements.add(statement);
+    }
+    
+    public void addAllStatements(Collection<StatementNode> stmts) {
+        statements.addAll(stmts);
     }
 
     @Override

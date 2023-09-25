@@ -8,6 +8,8 @@
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="proccesssymb"/>
+			<item value="bytes"/>
 			<item value="numEmployees"/>
 			<item value="input"/>
 			<item value="double"/>
@@ -21,8 +23,6 @@
 			<item value="ctr"/>
 			<item value="student"/>
 			<item value="coolnessFactor"/>
-			<item value="Main"/>
-			<item value="SecondRangeLength"/>
 		</list>
 		<list key="replacehistory">
 			<item value="scanner"/>

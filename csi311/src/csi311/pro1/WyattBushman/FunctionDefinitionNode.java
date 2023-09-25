@@ -39,6 +39,14 @@ public class FunctionDefinitionNode extends Node {
 
         return functionRepresentation.toString();
     }
+    
+    public void addStatement(StatementNode statement) {
+        if (statement == null) {
+            throw new IllegalArgumentException("Statement cannot be null");
+        }
+        this.statements.add(statement);
+    }
+
 
 
     public String getFunctionName() {

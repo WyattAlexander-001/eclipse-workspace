@@ -1,6 +1,8 @@
 package csi311.pro1.WyattBushman;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 public class ProgramNode extends Node {
     private LinkedList<FunctionDefinitionNode> functionDefinitions;
@@ -15,21 +17,22 @@ public class ProgramNode extends Node {
         blocks = new LinkedList<>();
     }
 
-    public LinkedList<FunctionDefinitionNode> getFunctionDefinitions() {
-        return functionDefinitions;
+    public List<FunctionDefinitionNode> getFunctionDefinitions() {
+        return Collections.unmodifiableList((List<FunctionDefinitionNode>) functionDefinitions);
     }
 
-    public LinkedList<BlockNode> getBeginBlocks() {
-        return beginBlocks;
+    public List<BlockNode> getBeginBlocks() {
+        return Collections.unmodifiableList((List<BlockNode>) beginBlocks);
     }
 
-    public LinkedList<BlockNode> getEndBlocks() {
-        return endBlocks;
+    public List<BlockNode> getEndBlocks() {
+        return Collections.unmodifiableList((List<BlockNode>) endBlocks);
     }
 
-    public LinkedList<BlockNode> getBlocks() {
-        return blocks;
+    public List<BlockNode> getBlocks() {
+        return Collections.unmodifiableList((List<BlockNode>) blocks);
     }
+
     
     // Helper methods to add nodes to each list
     public void addFunctionDefinition(FunctionDefinitionNode functionDefinition) {
@@ -47,12 +50,7 @@ public class ProgramNode extends Node {
     public void addBlock(BlockNode block) {
         this.blocks.add(block);
     }
-    
-    
-    
-    
-    
-    
+       
     @Override
     public String toString() {
         StringBuilder programRepresentation = new StringBuilder();

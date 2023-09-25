@@ -22,6 +22,9 @@ public class TokenManager {
     }
 
     public Optional<Token> MatchAndRemove(TokenType t) {
+        if (t == null) {
+            throw new IllegalArgumentException("TokenType cannot be null");
+        }
         if (!tokens.isEmpty() && tokens.getFirst().getType() == t) {
             return Optional.of(tokens.removeFirst());
         }
