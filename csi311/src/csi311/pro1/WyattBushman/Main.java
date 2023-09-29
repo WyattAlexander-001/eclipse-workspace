@@ -2,12 +2,13 @@ package csi311.pro1.WyattBushman;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 
 public class Main {
     public static void main(String[] args) {
-    	System.out.println("Current Directory: " + new File("").getAbsolutePath() + "\n");
+        System.out.println("Current Directory: " + new File("").getAbsolutePath() + "\n");
+        
         if (args.length == 0) {
             System.out.println("Please provide the path to the AWK file.");
             return;
@@ -19,53 +20,58 @@ public class Main {
             byte[] bytes = Files.readAllBytes(Paths.get(filePath));
             String content = new String(bytes);
 
+            // Lexical analysis phase
             StringHandler stringHandler = new StringHandler(content);
             Lexer lexer = new Lexer(stringHandler);
 
             lexer.lex();
 
-            for (Token token : lexer.getTokens()) {
+            LinkedList<Token> tokens = lexer.getTokens();
+            
+            for (Token token : tokens) {
                 System.out.println(token);
             }
+            
+            // Parsing phase
+            Parser parser = new Parser(tokens);
+            ProgramNode program = parser.Parse();
+            
+            System.out.println("\nParsed Program:\n" + program);
 
         } catch (Exception e) {
-            System.out.println("An error occurred during lexical analysis: " + e.getMessage());
+            System.out.println("An error occurred: " + e.getMessage());
             e.printStackTrace();
         }
     }
 }
 
+
+
+
+
+
+
+
+
 /*
-How I ran this on local machine
+absinthe@dyn-169-226-103-103 src % javac csi311/pro1/WyattBushman/Main.java \
+csi311/pro1/WyattBushman/Parser.java \
+csi311/pro1/WyattBushman/Lexer.java \
+csi311/pro1/WyattBushman/TokenManager.java \
+csi311/pro1/WyattBushman/StringHandler.java \
+csi311/pro1/WyattBushman/Token.java \
+csi311/pro1/WyattBushman/TokenType.java \
+csi311/pro1/WyattBushman/Node.java \
+csi311/pro1/WyattBushman/OperationType.java \
+csi311/pro1/WyattBushman/OperationNode.java \
+csi311/pro1/WyattBushman/ProgramNode.java \
+csi311/pro1/WyattBushman/FunctionDefinitionNode.java \
+csi311/pro1/WyattBushman/StatementNode.java \
+csi311/pro1/WyattBushman/BlockNode.java \
+csi311/pro1/WyattBushman/VariableReferenceNode.java
 
-(base) Wyatts-MacBook-Pro:src absinthe$ javac csi311/pro1/WyattBushman/Main.java csi311/pro1/WyattBushman/StringHandler.java csi311/pro1/WyattBushman/Lexer.java
-(base) Wyatts-MacBook-Pro:src absinthe$ 
-(base) Wyatts-MacBook-Pro:src absinthe$ java csi311.pro1.WyattBushman.Main
-Current Directory: /Users/absinthe/eclipse-workspace/csi311/src
+java csi311.pro1.WyattBushman.Main /Users/absinthe/eclipse-workspace/csi311/resources/testFile.awk
 
-Please provide the path to the AWK file.
-(base) Wyatts-MacBook-Pro:src absinthe$ java csi311.pro1.WyattBushman.Main /Users/absinthe/eclipse-workspace/csi311/resources/testFile.awk
-Current Directory: /Users/absinthe/eclipse-workspace/csi311/src
-
-Token Type: SEPARATOR || Line: 1 || Position: 0
-
-Token Type: NUMBER Value: 5 || Line: 2 || Position: 0
-
-Token Type: WORD Value: goodbye || Line: 2 || Position: 2
-
-Token Type: SEPARATOR || Line: 2 || Position: 9
-
-Token Type: NUMBER Value: 5.23 || Line: 3 || Position: 0
-
-Token Type: NUMBER Value: 8.5 || Line: 3 || Position: 5
-
-Token Type: NUMBER Value: 3 || Line: 3 || Position: 9
-
-Token Type: SEPARATOR || Line: 3 || Position: 10
-
-Token Type: SEPARATOR || Line: 4 || Position: 0
-
-(base) Wyatts-MacBook-Pro:src absinthe$ 
 
   */
 

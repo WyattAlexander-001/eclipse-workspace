@@ -1,6 +1,7 @@
 package csi311.pro1.WyattBushman;
 
 import java.util.LinkedList;
+import java.util.Optional;
 
 public class Parser {
     private TokenManager tokenManager;
@@ -22,14 +23,15 @@ public class Parser {
     public ProgramNode Parse() {
         ProgramNode program = new ProgramNode();
         while (tokenManager.MoreTokens()) {
-            if (!ParseFunction(program) && !ParseAction(program)) {
+            if (ParseFunction(program) || ParseAction(program)) {
+                AcceptSeparators();
+            } else {
                 System.out.println("Failed at token: " + tokenManager.Peek(0).get().getValue());
                 throw new RuntimeException("Unexpected token found.");
             }
         }
-        return program; // Creates our root node
+        return program;
     }
-
 
     public boolean ParseFunction(ProgramNode program) {
         if (tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() == TokenType.FUNCTION) {
@@ -77,18 +79,24 @@ public class Parser {
             TokenType type = tokenManager.Peek(0).get().getType();
             if (type == TokenType.BEGIN) {
                 tokenManager.MatchAndRemove(TokenType.BEGIN);
+                AcceptSeparators();  
                 BlockNode block = ParseBlock();
                 program.addBeginBlock(block);   
                 AcceptSeparators();
                 return true;
             } else if (type == TokenType.END) {
                 tokenManager.MatchAndRemove(TokenType.END);
+                AcceptSeparators();  
                 BlockNode block = ParseBlock();
                 program.addEndBlock(block); 
                 AcceptSeparators();
                 return true;
-            } else {
-                // Todo: Handle condition parsing if necessary.
+            } else if (type == TokenType.OPEN_CURLY || isPossiblePattern(type)) {
+                // If the token is an OPEN_CURLY, do not consume it. Let ParseBlock handle it.
+                if (type != TokenType.OPEN_CURLY) {
+                    tokenManager.MatchAndRemove(type);
+                    AcceptSeparators();
+                }
                 BlockNode block = ParseBlock();
                 program.addBlock(block); 
                 return true;
@@ -97,25 +105,37 @@ public class Parser {
         return false;
     }
 
-    
+
+    private boolean isPossiblePattern(TokenType type) {
+        return type == TokenType.WORD;
+    }
+
     public BlockNode ParseBlock() {
         BlockNode blockNode = new BlockNode();
-
-        // Expect an opening brace
+        AcceptSeparators();
         if(!tokenManager.MatchAndRemove(TokenType.OPEN_CURLY).isPresent()) {
             throw new RuntimeException("Expected opening curly brace");
+        }
+        
+        // Handle empty block
+        if (tokenManager.Peek(0).get().getType() == TokenType.CLOSE_CURLY) {
+            tokenManager.MatchAndRemove(TokenType.CLOSE_CURLY);
+            return blockNode;
         }
 
         while (tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() != TokenType.CLOSE_CURLY) {
             Token currentToken = tokenManager.Peek(0).get();
             if (currentToken.getType() == TokenType.WORD) {
                 tokenManager.MatchAndRemove(TokenType.WORD);
+            } else if(currentToken.getType() == TokenType.SEPARATOR) {
+                tokenManager.MatchAndRemove(TokenType.SEPARATOR);
             } else {
                 throw new RuntimeException("Unexpected token inside block: " + currentToken.getValue());
             }
         }
 
-        // Expect a closing brace
+        AcceptSeparators();
+
         if(!tokenManager.MatchAndRemove(TokenType.CLOSE_CURLY).isPresent()) {
             throw new RuntimeException("Expected closing curly brace");
         }
@@ -124,10 +144,98 @@ public class Parser {
     }
 
 
-
     
+    
+
     public TokenManager getTokenManager() {
         return tokenManager;
+    }
+    
+
+
+    public Optional<Node> ParseLValue() {
+        if (!tokenManager.MoreTokens()) {
+            return Optional.empty(); // Ensure we have more tokens
+        }
+
+        Token token = tokenManager.Peek(0).get();
+        
+        // Handle $ reference
+        if (token.getType() == TokenType.DOLLAR) {
+            tokenManager.MatchAndRemove(TokenType.DOLLAR);
+            Node bottomLevelNode = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected valid expression after $"));
+            return Optional.of(new OperationNode(bottomLevelNode, Optional.empty(), OperationType.FIELD_SELECTOR));
+        }
+
+        // Handle arrays
+        if (token.getType() == TokenType.WORD && tokenManager.Peek(1).get().getType() == TokenType.OPEN_SQUARE) {
+            String varName = token.getValue();
+            tokenManager.MatchAndRemove(TokenType.WORD);
+            tokenManager.MatchAndRemove(TokenType.OPEN_SQUARE);
+            Node indexExpr = ParseOperation().orElseThrow(() -> new RuntimeException("Expected valid index expression for array"));
+            tokenManager.MatchAndRemove(TokenType.CLOSE_SQUARE);
+            return Optional.of(new VariableReferenceNode(varName, Optional.of(indexExpr)));
+        }
+
+        // Handle simple variables
+        if (token.getType() == TokenType.WORD) {
+            String varName = token.getValue();
+            tokenManager.MatchAndRemove(TokenType.WORD);
+            return Optional.of(new VariableReferenceNode(varName, Optional.empty()));
+        }
+
+        return Optional.empty();
+    }
+    
+    public Optional<Node> ParseBottomLevel() {
+        if (!tokenManager.MoreTokens()) {
+            return Optional.empty(); 
+        }
+        Token token = tokenManager.Peek(0).get();
+        switch(token.getType()) {
+            case STRINGLITERAL:
+                tokenManager.MatchAndRemove(TokenType.STRINGLITERAL);
+                return Optional.of(new ConstantNode(token.getValue()));
+            case NUMBER:
+                tokenManager.MatchAndRemove(TokenType.NUMBER);
+                return Optional.of(new ConstantNode(token.getValue()));
+            case PATTERN:
+                tokenManager.MatchAndRemove(TokenType.PATTERN);
+                return Optional.of(new PatternNode(token.getValue()));
+            case OPEN_PAREN:
+                tokenManager.MatchAndRemove(TokenType.OPEN_PAREN);
+                Node internal = ParseOperation().orElseThrow(() -> new RuntimeException("Expected expression inside parentheses"));
+                if (!tokenManager.MatchAndRemove(TokenType.CLOSE_PAREN).isPresent()) {
+                    throw new RuntimeException("Mismatched parentheses");
+                }
+                return Optional.of(internal);
+            case NOT:
+                tokenManager.MatchAndRemove(TokenType.NOT);
+                Node notChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after NOT"));
+                return Optional.of(new OperationNode(notChild, Optional.empty(), OperationType.LOGICAL_NOT));
+            case PLUS:
+                tokenManager.MatchAndRemove(TokenType.PLUS);
+                Node unaryPosChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after +"));
+                return Optional.of(new OperationNode(unaryPosChild, Optional.empty(), OperationType.UNARY_POSITIVE));
+            case MINUS:
+                tokenManager.MatchAndRemove(TokenType.MINUS);
+                Node unaryNegChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after -"));
+                return Optional.of(new OperationNode(unaryNegChild, Optional.empty(), OperationType.UNARY_NEGATIVE));
+            case INC:
+                tokenManager.MatchAndRemove(TokenType.INC);
+                Node preIncChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after ++"));
+                return Optional.of(new OperationNode(preIncChild, Optional.empty(), OperationType.PREFIX_INCREMENT));
+            case DEC:
+                tokenManager.MatchAndRemove(TokenType.DEC);
+                Node preDecChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after --"));
+                return Optional.of(new OperationNode(preDecChild, Optional.empty(), OperationType.PREFIX_DECREMENT));
+            default:
+                return ParseLValue();
+        }
+    }
+
+    public Optional<Node> ParseOperation() {
+        return ParseBottomLevel();
     }
 
 }

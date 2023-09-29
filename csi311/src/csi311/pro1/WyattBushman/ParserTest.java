@@ -113,9 +113,43 @@ public class ParserTest {
         tokens.add(new Token(TokenType.OPEN_CURLY, 1, 1));
         parser.ParseBlock();
     }
-
-
-
     
+    @Test
+    public void testParseBlockBasicBraces() {
+        tokens.add(new Token(TokenType.OPEN_CURLY, 1, 1));
+        tokens.add(new Token(TokenType.CLOSE_CURLY, 2, 1));
+        BlockNode blockNode = parser.ParseBlock();
+        assertNotNull(blockNode);
+    }
+    
+    @Test
+    public void testParseBlockWithContents() {
+        tokens.add(new Token(TokenType.OPEN_CURLY, 1, 1));
+        tokens.add(new Token(TokenType.WORD, "test", 2, 2));
+        tokens.add(new Token(TokenType.SEPARATOR, 2, 7));
+        tokens.add(new Token(TokenType.CLOSE_CURLY, 3, 1));
+        BlockNode blockNode = parser.ParseBlock();
+        assertNotNull(blockNode);
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void testParseBlockWithoutClosingBrace() {
+        tokens.add(new Token(TokenType.OPEN_CURLY, 1, 1));
+        tokens.add(new Token(TokenType.WORD, "test", 2, 2));
+        tokens.add(new Token(TokenType.SEPARATOR, 2, 7));
+        parser.ParseBlock();
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void testParseBlockWithoutOpeningBrace() {
+        tokens.add(new Token(TokenType.WORD, "test", 2, 2));
+        tokens.add(new Token(TokenType.SEPARATOR, 2, 7));
+        tokens.add(new Token(TokenType.CLOSE_CURLY, 3, 1));
+        parser.ParseBlock();
+    }
+
+
+
+
 
 }
