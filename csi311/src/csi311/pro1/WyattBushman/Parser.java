@@ -92,7 +92,6 @@ public class Parser {
                 AcceptSeparators();
                 return true;
             } else if (type == TokenType.OPEN_CURLY || isPossiblePattern(type)) {
-                // If the token is an OPEN_CURLY, do not consume it. Let ParseBlock handle it.
                 if (type != TokenType.OPEN_CURLY) {
                     tokenManager.MatchAndRemove(type);
                     AcceptSeparators();
@@ -142,34 +141,33 @@ public class Parser {
 
         return blockNode;
     }
-
-
-    
-    
-
+   
     public TokenManager getTokenManager() {
         return tokenManager;
     }
     
-
-
     public Optional<Node> ParseLValue() {
         if (!tokenManager.MoreTokens()) {
-            return Optional.empty(); // Ensure we have more tokens
+            return Optional.empty();  // No more tokens to process
         }
 
-        Token token = tokenManager.Peek(0).get();
-        
+        Token currentToken = tokenManager.Peek(0).orElse(null);
+
+        if (currentToken == null) {
+            return Optional.empty();  // This check might be redundant given the previous check, but it's safe
+        }
+
         // Handle $ reference
-        if (token.getType() == TokenType.DOLLAR) {
+        if (currentToken.getType() == TokenType.DOLLAR) {
             tokenManager.MatchAndRemove(TokenType.DOLLAR);
             Node bottomLevelNode = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected valid expression after $"));
             return Optional.of(new OperationNode(bottomLevelNode, Optional.empty(), OperationType.FIELD_SELECTOR));
         }
 
         // Handle arrays
-        if (token.getType() == TokenType.WORD && tokenManager.Peek(1).get().getType() == TokenType.OPEN_SQUARE) {
-            String varName = token.getValue();
+        Optional<Token> nextTokenOptional = tokenManager.Peek(1);
+        if (currentToken.getType() == TokenType.WORD && nextTokenOptional.isPresent() && nextTokenOptional.get().getType() == TokenType.OPEN_SQUARE) {
+            String varName = currentToken.getValue();
             tokenManager.MatchAndRemove(TokenType.WORD);
             tokenManager.MatchAndRemove(TokenType.OPEN_SQUARE);
             Node indexExpr = ParseOperation().orElseThrow(() -> new RuntimeException("Expected valid index expression for array"));
@@ -178,14 +176,19 @@ public class Parser {
         }
 
         // Handle simple variables
-        if (token.getType() == TokenType.WORD) {
-            String varName = token.getValue();
+        if (currentToken.getType() == TokenType.WORD) {
+            String varName = currentToken.getValue();
             tokenManager.MatchAndRemove(TokenType.WORD);
             return Optional.of(new VariableReferenceNode(varName, Optional.empty()));
         }
 
         return Optional.empty();
     }
+
+    
+
+
+
     
     public Optional<Node> ParseBottomLevel() {
         if (!tokenManager.MoreTokens()) {
@@ -215,10 +218,19 @@ public class Parser {
                 return Optional.of(new OperationNode(notChild, Optional.empty(), OperationType.LOGICAL_NOT));
             case PLUS:
                 tokenManager.MatchAndRemove(TokenType.PLUS);
+                Token nextTokenForPlus = tokenManager.Peek(0).orElseThrow(() -> new RuntimeException("Expected expression after +"));
+                if(nextTokenForPlus.getType() == TokenType.STRINGLITERAL) {
+                    return Optional.empty();
+                }
                 Node unaryPosChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after +"));
                 return Optional.of(new OperationNode(unaryPosChild, Optional.empty(), OperationType.UNARY_POSITIVE));
+
             case MINUS:
                 tokenManager.MatchAndRemove(TokenType.MINUS);
+                Token nextTokenForMinus = tokenManager.Peek(0).orElseThrow(() -> new RuntimeException("Expected expression after -"));
+                if(nextTokenForMinus.getType() == TokenType.STRINGLITERAL) {
+                    return Optional.empty();
+                }
                 Node unaryNegChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after -"));
                 return Optional.of(new OperationNode(unaryNegChild, Optional.empty(), OperationType.UNARY_NEGATIVE));
             case INC:

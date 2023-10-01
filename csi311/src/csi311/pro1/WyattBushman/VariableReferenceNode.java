@@ -11,10 +11,14 @@ public class VariableReferenceNode extends Node {
         this.setIndexExpression(indexExpression);
     }
 
-	@Override
-	public String toString() {
-		return null;
-	}
+    @Override
+    public String toString() {
+        if(indexExpression.isPresent()) {
+            return name + "[" + indexExpression.get().toString() + "]";
+        } else {
+            return name;
+        }
+    }
 
 	public String getName() {
 		return name;

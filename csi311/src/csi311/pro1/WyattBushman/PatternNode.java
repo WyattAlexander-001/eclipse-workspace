@@ -7,10 +7,10 @@ public class PatternNode extends Node {
         this.setPattern(pattern);
     }
 
-	@Override
-	public String toString() {
-		return null;
-	}
+    @Override
+    public String toString() {
+        return pattern;
+    }
 
 	public String getPattern() {
 		return pattern;

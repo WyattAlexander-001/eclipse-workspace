@@ -9,7 +9,7 @@ public class ConstantNode extends Node {
 
 	@Override
 	public String toString() {
-		return null;
+		return value;
 	}
 
 	public String getValue() {

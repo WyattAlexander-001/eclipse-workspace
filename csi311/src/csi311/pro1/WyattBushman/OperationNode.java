@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public class OperationNode extends Node {
     private Node left;
-    private Optional<Node> right;  // This might be optional for unary operations
+    private Optional<Node> right;  
     private OperationType operationType;
 	
     public OperationNode(Node left, Optional<Node> right, OperationType operationType) {
