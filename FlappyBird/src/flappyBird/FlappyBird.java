@@ -19,21 +19,21 @@ import javax.swing.Timer;
 public class FlappyBird implements ActionListener, MouseListener, KeyListener
 {
 
-	public static FlappyBird flappyBird;
+	private static FlappyBird flappyBird;
 
-	public final int WIDTH = 800, HEIGHT = 800;
+	private final int WIDTH = 800, HEIGHT = 800;
 
-	public Renderer renderer;
+	private Renderer renderer;
 
-	public Rectangle bird;
+	private Rectangle bird;
 
-	public ArrayList<Rectangle> columns;
+	private ArrayList<Rectangle> columns;
 
-	public int ticks, yMotion, score;
+	private int ticks, yMotion, score;
 
-	public boolean gameOver, started;
+	private boolean gameOver, started;
 
-	public Random rand;
+	private Random rand;
 
 	public FlappyBird()
 	{
@@ -205,7 +205,7 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener
 	}
 
 	public static void main(String[] args){
-		flappyBird = new FlappyBird();
+		setFlappyBird(new FlappyBird());
 	}
 
 	@Override
@@ -243,6 +243,14 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener
 	@Override
 	public void keyPressed(KeyEvent e){
 		
+	}
+
+	public static FlappyBird getFlappyBird() {
+		return flappyBird;
+	}
+
+	public static void setFlappyBird(FlappyBird flappyBird) {
+		FlappyBird.flappyBird = flappyBird;
 	}
 
 }
