@@ -1,58 +1,71 @@
-//Add back to parser....
-    public Optional<Node> ParseExpression() {
-        Optional<Node> left = ParseTerm();
-        while (tokenManager.MoreTokens()) {
-            TokenType nextTokenType = tokenManager.Peek(0).get().getType();
-            OperationType operationType;
-            switch (nextTokenType) {
-                case PLUS:
-                    operationType = OperationType.ADDITION;
-                    break;
-                case MINUS:
-                    operationType = OperationType.SUBTRACTION;
-                    break;
-                default:
-                    return left;
-            }
-            matchAndRemove(nextTokenType);
-            Optional<Node> right = ParseTerm();
-            if (!right.isPresent()) {
-                throwParseException("Expected term after addition or subtraction operator");
-            }
-            left = Optional.of(new OperationNode(left.get(), right, operationType));
-        }
-        return left;
+public Optional<Node> ParseOperation() {
+        return ParseAssignment();
     }
     
+    public Optional<Node> ParseAssignment() {
+        return ParseAssignment(false);
+    }
+
+    public Optional<Node> ParseAssignment(boolean isRecursive) {
+        Optional<Node> potentialLValue = ParseLValue();
+        System.out.println("Parsed LValue: " + (potentialLValue.isPresent() ? potentialLValue.get().toString() : "none"));
+
+        if (potentialLValue.isPresent() && tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() == TokenType.ASSIGNMENT) {
+            System.out.println("Detected assignment operation...");
+
+            if (!(potentialLValue.get() instanceof VariableReferenceNode)) {
+                System.out.println("Invalid LValue for assignment. Throwing exception...");
+                throw new RuntimeException("Invalid left-hand side for assignment");
+            }
+
+            matchAndRemove(TokenType.ASSIGNMENT);
+
+            Optional<Node> rValue = ParseExpression(true);  
+            System.out.println("Parsed RValue: " + (rValue.isPresent() ? rValue.get().toString() : "none"));
+            if (!rValue.isPresent()) {
+                System.out.println("RValue not found after assignment. Throwing exception...");
+                throwParseException("Expected a value after assignment");
+            }
+
+            System.out.println("Successfully parsed assignment. Exiting ParseAssignment.");
+            return Optional.of(new OperationNode(potentialLValue.get(), rValue, OperationType.EQUALS));
+        }
+
+        // If we're here, it's not an assignment operation. Delegating to ParseTernary.
+        System.out.println("Not an assignment operation. Delegating to ParseTernary...");
+        return ParseTernary(); 
+    }
+
     public Optional<Node> ParseTernary() {
         Optional<Node> condition = ParseLogicalOr();
         if (!condition.isPresent()) {
             return Optional.empty();
         }
 
-        if (tokenManager.MoreTokens()) {
-            Token nextToken = tokenManager.Peek(0).get();
-            if (nextToken.getType() == TokenType.QUESTION) {
-                matchAndRemove(TokenType.QUESTION);
-                Optional<Node> trueCase = ParseOperation();
-                if (!trueCase.isPresent()) {
-                    throwParseException("Expected value for true case of ternary operation");
-                }
-                matchAndRemove(TokenType.COLON);
-                Optional<Node> falseCase = ParseOperation();
-                if (!falseCase.isPresent()) {
-                    throwParseException("Expected value for false case of ternary operation");
-                }
-                return Optional.of(new OperationNode(condition.get(), trueCase, OperationType.TERNARY_CONDITION));  // Adjust the OperationType as needed
+        if (tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() == TokenType.QUESTION) {
+            matchAndRemove(TokenType.QUESTION);
+            Optional<Node> trueCase = ParseOperation();
+            if (!trueCase.isPresent()) {
+                throwParseException("Expected value for true case of ternary operation");
             }
+            matchAndRemove(TokenType.COLON);
+            Optional<Node> falseCase = ParseOperation();
+            if (!falseCase.isPresent()) {
+                throwParseException("Expected value for false case of ternary operation");
+            }
+            return Optional.of(new OperationNode(condition.get(), trueCase, OperationType.TERNARY_CONDITION)); 
         }
-
+        
+        // Not a ternary operation, return the result of ParseLogicalOr (condition in this case)
         return condition;
     }
 
-    
     public Optional<Node> ParseLogicalOr() {
         Optional<Node> left = ParseLogicalAnd();
+        if (!left.isPresent()) {
+            return Optional.empty();
+        }
+        
         while (tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() == TokenType.OR) {
             matchAndRemove(TokenType.OR);
             Optional<Node> right = ParseLogicalAnd();
@@ -61,21 +74,88 @@
             }
             left = Optional.of(new OperationNode(left.get(), right, OperationType.LOGICAL_OR));
         }
+        
+        // Return the result, whether it's just the left operand or a combination of multiple logical OR operations
         return left;
     }
-    
+
     public Optional<Node> ParseLogicalAnd() {
-        Optional<Node> left = ParseComparison();
+        Optional<Node> left = ParseComparison(); // Assuming this is the next method in your chain
+        if (!left.isPresent()) {
+            return Optional.empty();
+        }
+        
         while (tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() == TokenType.AND) {
             matchAndRemove(TokenType.AND);
-            Optional<Node> right = ParseComparison();
+            Optional<Node> right = ParseComparison(); // Assuming this is the next method in your chain
             if (!right.isPresent()) {
                 throwParseException("Expected expression after logical AND");
             }
             left = Optional.of(new OperationNode(left.get(), right, OperationType.LOGICAL_AND));
         }
+        
+        // Return the result, whether it's just the left operand or a combination of multiple logical AND operations
         return left;
     }
+
+
+
+    
+    public Optional<Node> ParseArray() {
+        if (!tokenManager.MoreTokens() || tokenManager.Peek(0).get().getType() != TokenType.OPEN_SQUARE) {
+            return Optional.empty();
+        }
+
+        matchAndRemove(TokenType.OPEN_SQUARE);
+        ArrayNode arrayNode = new ArrayNode();
+
+        while (tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() != TokenType.CLOSE_SQUARE) {
+            // Parse the key
+            Optional<Node> key = ParseString(); 
+            if (!key.isPresent()) {
+                throwParseException("Expected a key inside the array");
+            }
+
+            // Expect an '=' token as assignment between key and value
+            if (!tokenManager.MatchAndRemove(TokenType.ASSIGNMENT).isPresent()) {
+                throwParseException("Expected '=' after key in array initialization");
+            }
+
+            // Parse the value
+            Optional<Node> value = ParseOperation(); // This should be your general expression parsing method.
+            if (!value.isPresent()) {
+                throwParseException("Expected a value for the key inside the array");
+            }
+
+            // Add key-value pair to the array node
+            arrayNode.put(key.get(), value.get());
+
+            // If there's another key-value pair, expect a comma
+            if (tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() == TokenType.COMMA) {
+                matchAndRemove(TokenType.COMMA);
+            }
+        }
+
+        if (!tokenManager.MatchAndRemove(TokenType.CLOSE_SQUARE).isPresent()) {
+            throwParseException("Expected ']' after array elements");
+        }
+
+        return Optional.of(arrayNode);
+    }
+    
+    public Optional<Node> ParseMatch() {
+        Optional<Node> left = ParseComparison();
+        if (left.isPresent() && matchAndRemove(TokenType.MATCH).isPresent()) {
+            Optional<Node> right = ParseConcatenation();
+            if (!right.isPresent()) {
+                throwParseException("Expected expression after MATCH operator");
+            }
+            return Optional.of(new OperationNode(left.get(), right, OperationType.REGEX_MATCH)); // Assuming you have this operation type
+        }
+        return left;
+    }
+    
+
     
     public Optional<Node> ParseComparison() {
         Optional<Node> left = ParseExpression();
@@ -114,6 +194,53 @@
         return left;
     }
     
+    public Optional<Node> ParseConcatenation() {
+        Optional<Node> left = ParseExpression();
+        while (tokenManager.MoreTokens() && matchAndRemove(TokenType.WORD).isPresent()) {
+            Optional<Node> right = ParseExpression();
+            if (!right.isPresent()) {
+                throwParseException("Expected expression after concatenation");
+            }
+            left = Optional.of(new OperationNode(left.get(), right, OperationType.STRING_CONCATENATION));
+        }
+        return left;
+    }
+    
+    public Optional<Node> ParseExpression() {
+        return ParseExpression(false);
+    }
+
+    Optional<Node> ParseExpression(boolean isRecursive) {
+        Optional<Node> left = ParseTerm();
+        while (tokenManager.MoreTokens()) {
+            TokenType nextTokenType = tokenManager.Peek(0).get().getType();
+            OperationType operationType;
+            switch (nextTokenType) {
+                case PLUS:
+                    operationType = OperationType.ADDITION;
+                    break;
+                case MINUS:
+                    operationType = OperationType.SUBTRACTION;
+                    break;
+                default:
+                    if (isRecursive && !left.isPresent()) {
+                        throw new RuntimeException("Invalid term in expression.");
+                    }
+                    return left;
+            }
+            matchAndRemove(nextTokenType);
+            Optional<Node> right = ParseTerm();
+            if (!right.isPresent()) {
+                throwParseException("Expected term after addition or subtraction operator");
+            }
+            left = Optional.of(new OperationNode(left.get(), right, operationType));
+        }
+        if (isRecursive && !left.isPresent()) {
+            throw new RuntimeException("Invalid term in expression.");
+        }
+        return left;
+    }
+    
 
     
     public Optional<Node> ParseTerm() {
@@ -144,17 +271,8 @@
         return left;
     }
     
-    public Optional<Node> ParseFactor() {
-        Optional<Node> base = ParseBottomLevel();
-        if (tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() == TokenType.EXPONENT) {
-            matchAndRemove(TokenType.EXPONENT);
-            Optional<Node> exponent = ParseFactor();  // recursion to handle right-associativity
-            if (!exponent.isPresent()) {
-                throwParseException("Expected expression after '^'");
-            }
-            return Optional.of(new OperationNode(base.get(), exponent, OperationType.EXPONENTIATION));
-        }
-        return base;
+    public Optional<Node> ParseFactor() { //It has no use, make optional parseexponent.....
+    	return ParseExponentiation();
     }
     
     public Optional<Node> ParseExponentiation() {
@@ -179,3 +297,148 @@
         
         return base;
     }
+    
+    public Optional<Node> ParsePostIncrementAndDecrement() {
+        Optional<Node> node = ParseLValue();
+        if (!node.isPresent()) {
+            return Optional.empty();
+        }
+        
+        if (!tokenManager.MoreTokens()) {
+            return node;
+        }
+
+        Token nextToken = tokenManager.Peek(0).get();
+        if (nextToken.getType() == TokenType.INC) {
+            tokenManager.MatchAndRemove(TokenType.INC);
+            return Optional.of(new OperationNode(node.get(), null, OperationType.POSTFIX_INCREMENT));
+        } else if (nextToken.getType() == TokenType.DEC) {
+            tokenManager.MatchAndRemove(TokenType.DEC);
+            return Optional.of(new OperationNode(node.get(), null, OperationType.POSTFIX_DECREMENT));
+        }
+
+        return node;
+    }
+    
+    public Optional<Node> ParseLValue() {
+        if (!tokenManager.MoreTokens()) {
+            return Optional.empty();  
+        }
+
+        Token currentToken = tokenManager.Peek(0).orElse(null);
+
+        if (currentToken == null) {
+            return Optional.empty();  // This check might be redundant given the previous check, but it's safe...I think
+        }
+
+        // Handle $ reference
+        if (currentToken.getType() == TokenType.DOLLAR) {
+            tokenManager.MatchAndRemove(TokenType.DOLLAR);
+            Node bottomLevelNode = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected valid expression after $"));
+            return Optional.of(new OperationNode(bottomLevelNode, Optional.empty(), OperationType.FIELD_SELECTOR));
+        }
+
+        // Handle arrays
+        Optional<Token> nextTokenOptional = tokenManager.Peek(1);
+        if (currentToken.getType() == TokenType.WORD && nextTokenOptional.isPresent() && nextTokenOptional.get().getType() == TokenType.OPEN_SQUARE) {
+            String varName = currentToken.getValue();
+            tokenManager.MatchAndRemove(TokenType.WORD);
+            tokenManager.MatchAndRemove(TokenType.OPEN_SQUARE);
+            Node indexExpr = ParseOperation().orElseThrow(() -> new RuntimeException("Expected valid index expression for array"));
+            tokenManager.MatchAndRemove(TokenType.CLOSE_SQUARE);
+            return Optional.of(new VariableReferenceNode(varName, Optional.of(indexExpr)));
+        }
+
+        // Handle simple variables
+        if (currentToken.getType() == TokenType.WORD) {
+            String varName = currentToken.getValue();
+            tokenManager.MatchAndRemove(TokenType.WORD);
+            return Optional.of(new VariableReferenceNode(varName, Optional.empty()));
+        }
+        
+        // Handle string literal
+        if (currentToken.getType() == TokenType.STRINGLITERAL 
+        	    && tokenManager.Peek(1).isPresent() 
+        	    && (tokenManager.Peek(1).get().getType() == TokenType.INC 
+        	        || tokenManager.Peek(1).get().getType() == TokenType.DEC)) {
+        	    throw new RuntimeException("Postfix increment/decrement is not valid for constants");
+        }
+
+        return Optional.empty();
+    }
+    
+    public Optional<Node> ParseBottomLevel() {
+        if (!tokenManager.MoreTokens()) {
+            return Optional.empty(); 
+        }
+        
+        Token token = tokenManager.Peek(0).get();
+        switch(token.getType()) {
+        case STRINGLITERAL:
+            tokenManager.MatchAndRemove(TokenType.STRINGLITERAL);
+            Node constantNode = new ConstantNode(token.getValue());
+            if (tokenManager.MoreTokens()) {
+                Token nextToken = tokenManager.Peek(0).get();
+                if (nextToken.getType() == TokenType.INC || nextToken.getType() == TokenType.DEC) {
+                    throw new RuntimeException("Postfix increment/decrement is not valid for constants");
+                }
+            }
+            return Optional.of(constantNode);
+            case NUMBER:
+                tokenManager.MatchAndRemove(TokenType.NUMBER);
+                return Optional.of(new ConstantNode(token.getValue()));
+            case PATTERN:
+                tokenManager.MatchAndRemove(TokenType.PATTERN);
+                return Optional.of(new PatternNode(token.getValue()));
+            case OPEN_PAREN:
+                tokenManager.MatchAndRemove(TokenType.OPEN_PAREN);
+                Node internal = ParseOperation().orElseThrow(() -> new RuntimeException("Expected expression inside parentheses"));
+                if (!tokenManager.MatchAndRemove(TokenType.CLOSE_PAREN).isPresent()) {
+                    throw new RuntimeException("Mismatched parentheses");
+                }
+                return Optional.of(internal);
+            case NOT:
+                tokenManager.MatchAndRemove(TokenType.NOT);
+                Node notChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after NOT"));
+                return Optional.of(new OperationNode(notChild, Optional.empty(), OperationType.LOGICAL_NOT));
+            case PLUS:
+                tokenManager.MatchAndRemove(TokenType.PLUS);
+                Token nextTokenForPlus = tokenManager.Peek(0).orElseThrow(() -> new RuntimeException("Expected expression after +"));
+                if(nextTokenForPlus.getType() == TokenType.STRINGLITERAL) {
+                    return Optional.empty();
+                }
+                Node unaryPosChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after +"));
+                return Optional.of(new OperationNode(unaryPosChild, Optional.empty(), OperationType.UNARY_POSITIVE));
+
+            case MINUS:
+                tokenManager.MatchAndRemove(TokenType.MINUS);
+                Token nextTokenForMinus = tokenManager.Peek(0).orElseThrow(() -> new RuntimeException("Expected expression after -"));
+                if(nextTokenForMinus.getType() == TokenType.STRINGLITERAL) {
+                    return Optional.empty();
+                }
+                Node unaryNegChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after -"));
+                return Optional.of(new OperationNode(unaryNegChild, Optional.empty(), OperationType.UNARY_NEGATIVE));
+            case INC:
+                tokenManager.MatchAndRemove(TokenType.INC);
+                Node preIncChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after ++"));
+                return Optional.of(new OperationNode(preIncChild, Optional.empty(), OperationType.PREFIX_INCREMENT));
+            case DEC:
+                tokenManager.MatchAndRemove(TokenType.DEC);
+                Node preDecChild = ParseBottomLevel().orElseThrow(() -> new RuntimeException("Expected expression after --"));
+                return Optional.of(new OperationNode(preDecChild, Optional.empty(), OperationType.PREFIX_DECREMENT));
+            default:
+                Node bottomLevelResult = ParseLValue().orElse(null);
+                if (bottomLevelResult != null) {
+                    if (tokenManager.MoreTokens()) {
+                        Token nextToken = tokenManager.Peek(0).get();
+                        Optional<Node> postOpNode = ParsePostIncrementAndDecrement();
+                        if(postOpNode.isPresent()) {
+                            return postOpNode;
+                        }
+                    }
+                    return Optional.of(bottomLevelResult);
+                }
+        }
+        return Optional.empty();
+    }
+    

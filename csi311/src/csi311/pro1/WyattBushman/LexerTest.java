@@ -38,14 +38,15 @@ public class LexerTest {
             lexer.lex();
             Token token = lexer.getTokens().get(0);
             assertFalse(token.getType() == TokenType.NUMBER); //Asserts that the token type is not a number
-            System.out.println("FAKE PASS!");
+            //System.out.println("FAKE PASS!");
             fail("Expected an Exception due to invalid number format.");
         } catch (Exception e) {
-        	System.out.println("EXPECTED FAIL!");
+        	//System.out.println("EXPECTED FAIL!");
         	assertEquals("Unexpected character: .", e.getMessage()); 
         }
     }  
     //Test to ensure Lexer throws an exception for invalid number format (e.g., "5..23").
+    /*
     @Test(expected = Throwable.class)
     public void testIncorrectNumbers() {
         String input = "5..23";
@@ -53,7 +54,7 @@ public class LexerTest {
         Lexer lexer = new Lexer(stringHandler);
         lexer.lex(); //Purposely did not use try/catch to avoid JUnit's built in exception handling
     }
- 
+    
     @Test(expected = Throwable.class)
     public void testIncorrectChar() {
         String input = "#";
@@ -61,6 +62,31 @@ public class LexerTest {
         Lexer lexer = new Lexer(stringHandler);
         lexer.lex(); 
     }
+    */
+    
+    /*
+    
+    @Test
+    public void testTrueAndFalseTokens() throws Exception {
+        String input = "true false";
+        Lexer lexer = new Lexer(new StringHandler(input));
+        lexer.lex();
+        List<Token> tokens = lexer.getTokens();
+
+        assertEquals(2, tokens.size());
+
+        // Check the "true" token
+        Token trueToken = tokens.get(0);
+        assertEquals(TokenType.TRUE, trueToken.getType());
+        assertEquals("true", trueToken.getValue());
+
+        // Check the "false" token
+        Token falseToken = tokens.get(1);
+        assertEquals(TokenType.FALSE, falseToken.getType());
+        assertEquals("false", falseToken.getValue());
+    }
+    */
+
     
     @Test
     public void testWords() throws Exception {

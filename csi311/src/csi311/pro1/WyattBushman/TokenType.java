@@ -25,6 +25,9 @@ public enum TokenType {
     EXIT,
     NEXTFILE,
     FUNCTION,
+    //I made TRUE/FALSE TOKENS FOR NOTHING!
+    //TRUE,
+    //FALSE,
 
     // Literal Types
     STRINGLITERAL,
@@ -71,5 +74,6 @@ public enum TokenType {
     DIVIDE,      // /
     MODULO,      // %
     PIPE,        // |
-    COMMA        // ,
+    COMMA,      // ,
+
 }

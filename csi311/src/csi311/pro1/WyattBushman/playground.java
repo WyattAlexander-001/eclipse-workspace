@@ -5,18 +5,22 @@ import java.util.Optional;
 
 public class playground {
     public static void main(String[] args) {
-        LinkedList<Token> tokens = new LinkedList<>();
-        tokens.add(new Token(TokenType.NUMBER, "10", 1, 1));
-        tokens.add(new Token(TokenType.ASSIGNMENT, "=", 1, 3));
-        tokens.add(new Token(TokenType.NUMBER, "5", 1, 4));
-        
-        Parser parser = new Parser(tokens);
-        
-        try {
-            Optional<Node> result = parser.ParseAssignment();
-            System.out.println(result.isPresent() ? result.get().toString() : "No Node returned");
-        } catch (RuntimeException e) {
-            System.out.println("Exception caught: " + e.getMessage());
-        }
+    	
+//    	ArrayNode myArray = new ArrayNode();
+//    	
+//    	ConstantNode key1 = new ConstantNode("key1");
+//    	ConstantNode value1 = new ConstantNode("value1");
+//    	myArray.put(key1, value1);
+//
+//    	ConstantNode key2 = new ConstantNode("key2");
+//    	ConstantNode value2 = new ConstantNode("value2");
+//    	myArray.put(key2, value2);
+//
+//    	ConstantNode queryKey = new ConstantNode("key1");
+//    	Node resultValue = myArray.get(queryKey);
+//    	System.out.println(resultValue.toString()); // Should print "value1"
+//
+//    	System.out.println(myArray.toString());
+
     }
 }

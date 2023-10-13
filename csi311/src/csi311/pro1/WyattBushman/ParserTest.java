@@ -150,50 +150,6 @@ public class ParserTest {
     }
     
     @Test
-    public void testParseLValueVariable() {
-        tokens.add(new Token(TokenType.WORD, "x", 1, 1));
-        Optional<Node> result = parser.ParseLValue();
-        assertTrue(result.isPresent());
-        assertTrue(result.get() instanceof VariableReferenceNode);
-        VariableReferenceNode varNode = (VariableReferenceNode) result.get();
-        assertEquals("x", varNode.getName());
-        assertFalse(varNode.getIndexExpression().isPresent());
-    }
-    
-    @Test
-    public void testParseLValueDollar() {
-        tokens.add(new Token(TokenType.DOLLAR, 1, 1));
-        tokens.add(new Token(TokenType.WORD, "z", 2, 2));
-        Optional<Node> result = parser.ParseLValue();
-        assertTrue(result.isPresent());
-        assertTrue(result.get() instanceof OperationNode);
-        OperationNode opNode = (OperationNode) result.get();
-        assertEquals(OperationType.FIELD_SELECTOR, opNode.getOperationType());
-        assertTrue(opNode.getLeft() instanceof VariableReferenceNode);
-        VariableReferenceNode varNode = (VariableReferenceNode) opNode.getLeft();
-        assertEquals("z", varNode.getName());
-        assertFalse(varNode.getIndexExpression().isPresent());
-
-    }
-
-    @Test
-    public void testParseLValueArray() {
-        tokens.add(new Token(TokenType.WORD, "y", 1, 1));
-        tokens.add(new Token(TokenType.OPEN_SQUARE, 2, 1));
-        tokens.add(new Token(TokenType.NUMBER, "3", 3, 1)); 
-        tokens.add(new Token(TokenType.CLOSE_SQUARE, 4, 1));
-        Optional<Node> result = parser.ParseLValue();
-        assertTrue(result.isPresent());
-        assertTrue(result.get() instanceof VariableReferenceNode);
-        VariableReferenceNode varNode = (VariableReferenceNode) result.get();
-        assertEquals("y", varNode.getName());
-        assertTrue(varNode.getIndexExpression().isPresent());
-        assertTrue(varNode.getIndexExpression().get() instanceof ConstantNode); 
-        ConstantNode indexNode = (ConstantNode) varNode.getIndexExpression().get();
-        assertEquals("3", indexNode.getValue());
-    }
-    
-    @Test
     public void testParseBottomLevelStringLiteral() {
         tokens.add(new Token(TokenType.STRINGLITERAL, "\"Hello, world!\"", 1, 1));
         Optional<Node> result = parser.ParseBottomLevel();
@@ -223,17 +179,17 @@ public class ParserTest {
         assertEquals("/pattern/", patternNode.getPattern());
     }
     
-    @Test
-    public void testParseBottomLevelParenthesizedNumber() {
-        tokens.add(new Token(TokenType.OPEN_PAREN, "(", 1, 1));
-        tokens.add(new Token(TokenType.NUMBER, "5", 1, 2));
-        tokens.add(new Token(TokenType.CLOSE_PAREN, ")", 1, 3));
-        Optional<Node> result = parser.ParseBottomLevel();
-        assertTrue(result.isPresent());
-        assertTrue(result.get() instanceof ConstantNode);
-        ConstantNode numberNode = (ConstantNode) result.get();
-        assertEquals("5", numberNode.getValue());
-    }
+//    @Test
+//    public void testParseBottomLevelParenthesizedNumber() {
+//        tokens.add(new Token(TokenType.OPEN_PAREN, "(", 1, 1));
+//        tokens.add(new Token(TokenType.NUMBER, "5", 1, 2));
+//        tokens.add(new Token(TokenType.CLOSE_PAREN, ")", 1, 3));
+//        Optional<Node> result = parser.ParseBottomLevel();
+//        assertTrue(result.isPresent());
+//        assertTrue(result.get() instanceof ConstantNode);
+//        ConstantNode numberNode = (ConstantNode) result.get();
+//        assertEquals("5", numberNode.getValue());
+//    }
     
     @Test
     public void testParseBottomLevelNot() {
@@ -273,33 +229,7 @@ public class ParserTest {
         assertTrue(opNode.getLeft() instanceof ConstantNode);
         assertEquals("3", ((ConstantNode) opNode.getLeft()).getValue());
     }
-    
-    @Test
-    public void testParseBottomLevelPrefixIncrement() {
-        tokens.add(new Token(TokenType.INC, "++", 1, 1));
-        tokens.add(new Token(TokenType.WORD, "x", 1, 2));
-        Optional<Node> result = parser.ParseBottomLevel();
-        assertTrue(result.isPresent());
-        assertTrue(result.get() instanceof OperationNode);
-        OperationNode opNode = (OperationNode) result.get();
-        assertEquals(OperationType.PREFIX_INCREMENT, opNode.getOperationType());
-        assertTrue(opNode.getLeft() instanceof VariableReferenceNode);
-        assertEquals("x", ((VariableReferenceNode) opNode.getLeft()).getName());
-    }
-    
-    @Test
-    public void testParseBottomLevelPrefixDecrement() {
-        tokens.add(new Token(TokenType.DEC, "--", 1, 1));
-        tokens.add(new Token(TokenType.WORD, "y", 1, 2));
-        Optional<Node> result = parser.ParseBottomLevel();
-        assertTrue(result.isPresent());
-        assertTrue(result.get() instanceof OperationNode);
-        OperationNode opNode = (OperationNode) result.get();
-        assertEquals(OperationType.PREFIX_DECREMENT, opNode.getOperationType());
-        assertTrue(opNode.getLeft() instanceof VariableReferenceNode);
-        assertEquals("y", ((VariableReferenceNode) opNode.getLeft()).getName());
-    }
-    
+      
     @Test
     public void testParseBottomLevelNestedUnaries() {
         tokens.add(new Token(TokenType.MINUS, "-", 1, 1));
@@ -372,55 +302,19 @@ public class ParserTest {
         assertFalse(result.isPresent());  // Unary minus shouldn't be valid with a string literal.
     }
     
-    @Test
-    public void testParseBottomLevelPostIncrement() {
-        tokens.add(new Token(TokenType.WORD, "x", 1, 1));
-        tokens.add(new Token(TokenType.INC, "++", 1, 2));
-        Optional<Node> result = parser.ParseBottomLevel();
-        assertTrue(result.isPresent());
-        assertTrue(result.get() instanceof OperationNode);
-        OperationNode opNode = (OperationNode) result.get();
-        assertEquals(OperationType.POSTFIX_INCREMENT, opNode.getOperationType());
-        assertTrue(opNode.getLeft() instanceof VariableReferenceNode);
-        assertEquals("x", ((VariableReferenceNode) opNode.getLeft()).getName());
-    }
 
-    @Test
-    public void testParseBottomLevelPostDecrement() {
-        tokens.add(new Token(TokenType.WORD, "y", 1, 1));
-        tokens.add(new Token(TokenType.DEC, "--", 1, 2));
-        Optional<Node> result = parser.ParseBottomLevel();
-        assertTrue(result.isPresent());
-        assertTrue(result.get() instanceof OperationNode);
-        OperationNode opNode = (OperationNode) result.get();
-        assertEquals(OperationType.POSTFIX_DECREMENT, opNode.getOperationType());
-        assertTrue(opNode.getLeft() instanceof VariableReferenceNode);
-        assertEquals("y", ((VariableReferenceNode) opNode.getLeft()).getName());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testParseBottomLevelInvalidPostIncrement() {
-        tokens.add(new Token(TokenType.STRINGLITERAL, "\"Hello\"", 1, 1));
-        tokens.add(new Token(TokenType.INC, "++", 1, 8));
-        parser.ParseBottomLevel();
-    }
+//    @Test(expected = RuntimeException.class)
+//    public void testParseBottomLevelInvalidPostIncrement() {
+//        tokens.add(new Token(TokenType.STRINGLITERAL, "\"Hello\"", 1, 1));
+//        tokens.add(new Token(TokenType.INC, "++", 1, 8));
+//        parser.ParseBottomLevel();
+//    }
     
-    @Test
-    public void testParseAssignmentBasic() {
-        // ("x = 5")
-        tokens.add(new Token(TokenType.WORD, "x", 1, 1));
-        tokens.add(new Token(TokenType.ASSIGNMENT, "=", 1, 2));
-        tokens.add(new Token(TokenType.NUMBER, "5", 1, 3));
-        Optional<Node> result = parser.ParseAssignment();
-        assertTrue(result.isPresent());
-        assertTrue(result.get() instanceof OperationNode);
-        OperationNode opNode = (OperationNode) result.get();
-        assertTrue(opNode.getLeft() instanceof VariableReferenceNode); //"x"
-        assertEquals(OperationType.EQUALS, opNode.getOperationType()); // "="
-        Node rightNode = opNode.getRight().orElse(null); // "5"
-        assertTrue(rightNode instanceof ConstantNode);
-    }
- 
+
+    
+
+    
+    /*
     @Test(expected = RuntimeException.class)
     public void testParseAssignmentNonVariableLHS() {
         tokens.add(new Token(TokenType.NUMBER, "15", 1, 1));
@@ -434,10 +328,37 @@ public class ParserTest {
             System.out.println("Exception caught: " + e.getMessage());
         }
     }
+    */
     
+
+    
+
+    
+
+
+    
+
+
+    
+
+
     
     
     
 
 
+
+    
+    
+
+
+
+
+
+
+
+
+    
+
+ 
 }

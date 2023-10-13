@@ -97,6 +97,8 @@ public class Lexer {
         keywords.put("exit", TokenType.EXIT);
         keywords.put("nextfile", TokenType.NEXTFILE);
         keywords.put("function", TokenType.FUNCTION);
+        //keywords.put("true", TokenType.TRUE);
+        //keywords.put("false", TokenType.FALSE);
     }
 
     

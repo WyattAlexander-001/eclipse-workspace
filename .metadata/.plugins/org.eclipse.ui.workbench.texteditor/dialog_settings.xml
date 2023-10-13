@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="functionNode.getSt"/>
+		<item key="selection" value="IN"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="in"/>
+			<item value="parseassign"/>
+			<item value="ParseTerm()"/>
+			<item value="ParseExpression"/>
+			<item value="expected fail"/>
+			<item value="expected"/>
+			<item value="parseOpe"/>
+			<item value="matchandremove"/>
+			<item value="`"/>
+			<item value="isPossible"/>
+			<item value="constantnode"/>
+			<item value="ParseOpe"/>
+			<item value="option"/>
 			<item value="functionNode.getSt"/>
 			<item value="proccesssymb"/>
-			<item value="bytes"/>
-			<item value="numEmployees"/>
-			<item value="input"/>
-			<item value="double"/>
-			<item value="float"/>
-			<item value="black"/>
-			<item value="choice"/>
-			<item value="\t"/>
-			<item value="keyboard"/>
-			<item value="array"/>
-			<item value="obj"/>
-			<item value="ctr"/>
-			<item value="student"/>
 		</list>
 		<list key="replacehistory">
+			<item value=""/>
 			<item value="scanner"/>
 			<item value="float"/>
 			<item value="double"/>
 			<item value="userChoice"/>
-			<item value=""/>
 			<item value="input"/>
 			<item value="data"/>
 			<item value="student"/>
@@ -43,10 +43,14 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="65"/>
-		<item key="DIALOG_Y_ORIGIN" value="405"/>
+		<item key="DIALOG_X_ORIGIN" value="407"/>
+		<item key="DIALOG_Y_ORIGIN" value="557"/>
 		<item key="DIALOG_WIDTH" value="336"/>
 		<item key="DIALOG_HEIGHT" value="402"/>
 		<item key="DIALOG_FONT_NAME" value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="305"/>
+		<item key="DIALOG_Y_ORIGIN" value="382"/>
 	</section>
 </section>
