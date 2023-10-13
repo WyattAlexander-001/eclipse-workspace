@@ -12,7 +12,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Random;
-
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -34,9 +33,13 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener
 	private boolean gameOver, started;
 
 	private Random rand;
+	private int MousePressCount;
+	private int KeyboardPressCount;
 
 	public FlappyBird()
 	{
+		MousePressCount = 0;
+		KeyboardPressCount = 0;
 		JFrame jframe = new JFrame();
 		Timer timer = new Timer(20, this);
 
@@ -222,6 +225,8 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener
 	
 	@Override
 	public void mousePressed(MouseEvent e){
+		MousePressCount++;
+		System.out.println("Pressed Mouse!" + MousePressCount);
 	}
 
 	@Override
@@ -238,6 +243,8 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener
 
 	@Override
 	public void keyTyped(KeyEvent e){
+		KeyboardPressCount++;
+		System.out.println("Press! Keyboard!" + KeyboardPressCount);
 	}
 
 	@Override
