@@ -1,9 +1,11 @@
 package csi311.pro1.WyattBushman;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class Parser {
     private TokenManager tokenManager;
@@ -979,59 +981,351 @@ public class Parser {
         }
     }
     
-// Newer:    
-//    public Optional<Node> ParseBottomLevel() {
-//        if (debugMode) {
-//            if (!tokenManager.MoreTokens()) {
-//                return Optional.empty();
-//            }
-//
-//            Token token = tokenManager.Peek(0).get();
-//            switch (token.getType()) {
-//                case STRINGLITERAL:
-//                    tokenManager.MatchAndRemove(TokenType.STRINGLITERAL);
-//                    return Optional.of(new ConstantNode(token.getValue()));
-//
-//                case NUMBER:
-//                    tokenManager.MatchAndRemove(TokenType.NUMBER);
-//                    return Optional.of(new ConstantNode(token.getValue()));
-//
-//                case PATTERN:
-//                    tokenManager.MatchAndRemove(TokenType.PATTERN);
-//                    return Optional.of(new PatternNode(token.getValue()));
-//
-//                case OPEN_PAREN:
-//                    tokenManager.MatchAndRemove(TokenType.OPEN_PAREN);
-//                    Optional<Node> internalOpt = ParseOperation(); 
-//                    if (!internalOpt.isPresent()) {
-//                        System.out.println("Failed at token: " + tokenManager.Peek(0).orElse(null));
-//                        throw new RuntimeException("Expected expression inside parentheses");
-//                    }
-//                    if (!tokenManager.MatchAndRemove(TokenType.CLOSE_PAREN).isPresent()) {
-//                        throw new RuntimeException("Mismatched parentheses");
-//                    }
-//                    return internalOpt;
-//
-//                case NOT:
-//                case PLUS:
-//                case MINUS:
-//                case INC:
-//                case DEC:
-//                    return ParseLValue();
-//
-//                default:
-//                    return Optional.empty();
-//            }
-//        } else {
-//            // ... (true logic here
-//        }
-//        return Optional.empty();
-//    }
-    
-
     public void setDebugMode(boolean mode) {
         this.debugMode = mode;
     }
+    
+    //===============Parser 4 ================
+    
+    public Optional<Node> ParseStatement() {
+        List<Supplier<Optional<? extends Node>>> parsers = Arrays.asList(
+            this::ParseIf,
+            this::ParseFor,
+            this::ParseContinue,
+            this::ParseBreak,
+            this::ParseDelete,
+            this::ParseWhile,
+            this::ParseDoWhile,
+            this::ParseReturn,
+            this::ParseFunctionCall
+        );
+        
+        for (Supplier<Optional<? extends Node>> parser : parsers) {
+            Optional<? extends Node> node = parser.get();
+            if (node.isPresent()) {
+                return (Optional<Node>) node;
+            }
+        }
+        return Optional.empty();
+    }
 
-  
+    public Optional<ContinueNode> ParseContinue() {
+        if (tokenManager.MatchAndRemove(TokenType.CONTINUE).isPresent()) {
+            return Optional.of(new ContinueNode());
+        }
+        return Optional.empty();
+    }
+
+    public Optional<BreakNode> ParseBreak() {
+        if (tokenManager.MatchAndRemove(TokenType.BREAK).isPresent()) {
+            return Optional.of(new BreakNode());
+        }
+        return Optional.empty();
+    }
+    
+
+
+
+    public Optional<Node> ParseBlockOrStatement() {
+        Optional<Node> blockOpt = Optional.ofNullable(ParseBlock());
+        if (blockOpt.isPresent()) {
+            return blockOpt;
+        } else {
+            return ParseStatement();
+        }
+    }
+    
+    public Optional<IfNode> ParseIf() {
+        if (!matchAndRemove(TokenType.IF).isPresent()) {
+            return Optional.empty();
+        }
+
+        // Expecting an open parenthesis after 'if'
+        if (!matchAndRemove(TokenType.OPEN_PAREN).isPresent()) {
+            throwParseException("Expected '(' after 'if'");
+        }
+
+        // Parse the condition inside the parentheses
+        Optional<Node> conditionOpt = ParseExpression();
+        if (!conditionOpt.isPresent()) {
+            throwParseException("Expected a condition expression after 'if('");
+        }
+        Node condition = conditionOpt.get();
+
+        // Expecting a close parenthesis after the condition
+        if (!matchAndRemove(TokenType.CLOSE_PAREN).isPresent()) {
+            throwParseException("Expected ')' after 'if' condition");
+        }
+
+        Optional<Node> trueBranchOpt = ParseBlockOrStatement();
+        if (!trueBranchOpt.isPresent()) {
+            throwParseException("Expected a statement or block after 'if' condition");
+        }
+
+        if (!(trueBranchOpt.get() instanceof BlockNode)) {
+            throwParseException("Expected a block node after 'if' condition");
+        }
+        BlockNode trueBranch = (BlockNode) trueBranchOpt.get();
+
+        // Construct the IfNode with the parsed data
+        IfNode ifNode = new IfNode(condition, trueBranch);
+
+        // Check if there's an 'else' branch
+        if (matchAndRemove(TokenType.ELSE).isPresent()) {
+            Optional<IfNode> falseBranchOpt = ParseIf();
+            if (!falseBranchOpt.isPresent()) {
+                throwParseException("Expected an 'if' node after 'else'");
+            }
+            ifNode.setElseBranch(falseBranchOpt.get());
+        }
+
+        return Optional.of(ifNode);
+    }
+
+
+    public Optional<ForNode> ParseFor() {
+        if (!tokenManager.MatchAndRemove(TokenType.FOR).isPresent()) {
+            return Optional.empty();
+        }
+
+        // Expecting an open parenthesis after 'for'
+        if (!tokenManager.MatchAndRemove(TokenType.OPEN_PAREN).isPresent()) {
+            throwParseException("Expected '(' after 'for'");
+        }
+
+        // Parse initialization part of the for loop
+        Optional<Node> initializationOpt = ParseExpression();
+        if (!initializationOpt.isPresent()) {
+            throwParseException("Expected an initialization expression in 'for' loop");
+        }
+        Node initialization = initializationOpt.get();
+
+        // Expecting a semicolon after initialization
+        if (!tokenManager.MatchAndRemove(TokenType.SEPARATOR).isPresent()) {
+            throwParseException("Expected ';' after initialization in 'for' loop");
+        }
+
+        // Parse condition part of the for loop
+        Optional<Node> conditionOpt = ParseExpression();
+        if (!conditionOpt.isPresent()) {
+            throwParseException("Expected a condition expression in 'for' loop");
+        }
+        Node condition = conditionOpt.get();
+
+        // Expecting a semicolon after condition
+        if (!tokenManager.MatchAndRemove(TokenType.SEPARATOR).isPresent()) {
+            throwParseException("Expected ';' after condition in 'for' loop");
+        }
+
+        // Parse iteration part of the for loop
+        Optional<Node> iterationOpt = ParseExpression();
+        if (!iterationOpt.isPresent()) {
+            throwParseException("Expected an iteration expression in 'for' loop");
+        }
+        Node iteration = iterationOpt.get();
+
+        // Expecting a close parenthesis after iteration
+        if (!tokenManager.MatchAndRemove(TokenType.CLOSE_PAREN).isPresent()) {
+            throwParseException("Expected ')' after iteration in 'for' loop");
+        }
+
+        // Parse the block of the for loop
+        Optional<Node> blockOpt = ParseBlockOrStatement();
+        if (!blockOpt.isPresent() || !(blockOpt.get() instanceof BlockNode)) {
+            throwParseException("Expected a block after 'for' loop");
+        }
+        BlockNode block = (BlockNode) blockOpt.get();
+
+        // Construct the ForNode with the parsed data
+        ForNode forNode = new ForNode(initialization, condition, iteration, block);
+
+        return Optional.of(forNode);
+    }
+
+    
+//    public Optional<ForEachNode> ParseForEach(){
+//        if (!tokenManager.MatchAndRemove(TokenType.FOR).isPresent()) {
+//            return Optional.empty();
+//        }
+//
+//        // (rest of your ParseFor logic)
+//        // Ensure to throw clear exceptions for unexpected tokens
+//
+//        return Optional.of(forNode);
+//    }
+
+    public Optional<WhileNode> ParseWhile() {
+        // Match the 'while' keyword
+        if (!tokenManager.MatchAndRemove(TokenType.WHILE).isPresent()) {
+            return Optional.empty();
+        }
+
+        // Expecting an open parenthesis after 'while'
+        if (!tokenManager.MatchAndRemove(TokenType.OPEN_PAREN).isPresent()) {
+            throwParseException("Expected '(' after 'while'");
+        }
+
+        // Parse the condition inside the parentheses
+        Optional<Node> conditionOpt = ParseExpression();
+        if (!conditionOpt.isPresent()) {
+            throwParseException("Expected a condition expression after 'while('");
+        }
+        Node condition = conditionOpt.get();
+
+        // Expecting a close parenthesis after the condition
+        if (!tokenManager.MatchAndRemove(TokenType.CLOSE_PAREN).isPresent()) {
+            throwParseException("Expected ')' after 'while' condition");
+        }
+        Optional<Node> blockOpt = ParseBlockOrStatement();
+        if (!blockOpt.isPresent() || !(blockOpt.get() instanceof BlockNode)) {
+            throwParseException("Expected a block or statement after 'while' condition");
+        }
+        BlockNode block = (BlockNode) blockOpt.get();
+        WhileNode whileNode = new WhileNode(condition, block);
+        return Optional.of(whileNode);
+    }
+    
+    public Optional<DoWhileNode> ParseDoWhile() {
+        // Match the 'do' keyword
+        if (!tokenManager.MatchAndRemove(TokenType.DO).isPresent()) {
+            return Optional.empty();
+        }
+
+        Optional<Node> blockOpt = ParseBlockOrStatement();
+        if (!blockOpt.isPresent() || !(blockOpt.get() instanceof BlockNode)) {
+            throwParseException("Expected a block or statement after 'do'");
+        }
+        BlockNode block = (BlockNode) blockOpt.get();
+
+        // Match the 'while' keyword after the block
+        if (!tokenManager.MatchAndRemove(TokenType.WHILE).isPresent()) {
+            throwParseException("Expected 'while' after 'do' block or statement");
+        }
+
+        // Expecting an open parenthesis after 'while'
+        if (!tokenManager.MatchAndRemove(TokenType.OPEN_PAREN).isPresent()) {
+            throwParseException("Expected '(' after 'while'");
+        }
+
+        // Parse the condition inside the parentheses
+        Optional<Node> conditionOpt = ParseExpression();
+        if (!conditionOpt.isPresent()) {
+            throwParseException("Expected a condition expression after 'while('");
+        }
+        Node condition = conditionOpt.get();
+
+        // Expecting a close parenthesis after the condition
+        if (!tokenManager.MatchAndRemove(TokenType.CLOSE_PAREN).isPresent()) {
+            throwParseException("Expected ')' after 'do-while' condition");
+        }
+
+        // Expecting a semicolon (or separator, based on your setup) after the condition
+        if (!tokenManager.MatchAndRemove(TokenType.SEPARATOR).isPresent()) {
+            throwParseException("Expected ';' after 'do-while' loop");
+        }
+
+        DoWhileNode doWhileNode = new DoWhileNode(block, condition);
+        return Optional.of(doWhileNode);
+    }
+
+
+    public Optional<DeleteNode> ParseDelete() {
+        Optional<Token> arrayNameToken = tokenManager.MatchAndRemove(TokenType.DELETE);
+        if (!arrayNameToken.isPresent()) {
+            throwParseException("Expected array name after 'delete'");
+        }
+        String arrayName = arrayNameToken.get().getValue();
+
+        // Expecting an open bracket '[' after the array name
+        if (!tokenManager.MatchAndRemove(TokenType.OPEN_SQUARE).isPresent()) {
+            throwParseException("Expected '[' after array name");
+        }
+
+        // Parse the index expression inside the brackets
+        Optional<Node> indexExpressionOpt = ParseExpression();
+        if (!indexExpressionOpt.isPresent()) {
+            throwParseException("Expected an index expression after array name and '['");
+        }
+        Node indexExpression = indexExpressionOpt.get();
+
+        // Expecting a close bracket ']' after the index expression
+        if (!tokenManager.MatchAndRemove(TokenType.CLOSE_SQUARE).isPresent()) {
+            throwParseException("Expected ']' after index expression");
+        }
+
+        // Expecting a semicolon (or separator, based on your setup) after the closing bracket
+        if (!tokenManager.MatchAndRemove(TokenType.SEPARATOR).isPresent()) {
+            throwParseException("Expected ';' after 'delete' statement");
+        }
+
+        // Construct the DeleteNode with the parsed data and return it
+        DeleteNode deleteNode = new DeleteNode(arrayName, indexExpression);
+        return Optional.of(deleteNode);
+    }
+
+
+    public Optional<ReturnNode> ParseReturn() {
+        // Already matched and removed 'RETURN' token at the start
+
+        // Parse the expression that should follow the 'return' keyword
+        Optional<Node> expressionOpt = ParseExpression();
+        if (!expressionOpt.isPresent()) {
+            throwParseException("Expected an expression after 'return'");
+        }
+        Node expression = expressionOpt.get();
+
+        // Expecting a semicolon after the expression
+        if (!tokenManager.MatchAndRemove(TokenType.SEPARATOR).isPresent()) {
+            throwParseException("Expected ';' after 'return' expression");
+        }
+        ReturnNode returnNode = new ReturnNode(expression);
+        return Optional.of(returnNode);
+    }
+
+
+    public Optional<FunctionCallNode> ParseFunctionCall() {
+        // We've already peeked and found a WORD token at the start, let's remove and use it.
+        Token functionNameToken = tokenManager.MatchAndRemove(TokenType.WORD).get();
+        
+        // Expecting an open parenthesis after the function name
+        if (!tokenManager.MatchAndRemove(TokenType.OPEN_PAREN).isPresent()) {
+            throwParseException("Expected '(' after function name in function call");
+        }
+
+        // Parse the arguments list
+        List<Node> arguments = new ArrayList<>();
+        while (!tokenManager.Peek(0).isPresent() || tokenManager.Peek(0).get().getType() != TokenType.CLOSE_PAREN) {
+            Optional<Node> argument = ParseExpression();
+            if (!argument.isPresent()) {
+                throwParseException("Expected an expression as an argument in function call");
+            }
+            arguments.add(argument.get());
+            
+            // If the next token is a comma, consume it and continue to the next argument
+            if (tokenManager.Peek(0).isPresent() && tokenManager.Peek(0).get().getType() == TokenType.COMMA) {
+                tokenManager.MatchAndRemove(TokenType.COMMA);
+            }
+        }
+
+        // Expecting a close parenthesis after the arguments list
+        if (!tokenManager.MatchAndRemove(TokenType.CLOSE_PAREN).isPresent()) {
+            throwParseException("Expected ')' to close the arguments list in function call");
+        }
+        FunctionCallNode functionCallNode = new FunctionCallNode(functionNameToken.getValue(), arguments);
+        return Optional.of(functionCallNode);
+    }
+
+
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

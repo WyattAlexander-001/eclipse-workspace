@@ -113,7 +113,7 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener
 
 	@Override
 	public void actionPerformed(ActionEvent e){
-		int speed = 10;
+		int speed = 10; //speed is tied to score, need to fix
 
 		ticks++;
 
@@ -191,7 +191,7 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener
 			paintColumn(g, column);
 		}
 
-		g.setColor(Color.white);
+		g.setColor(Color.black);
 		g.setFont(new Font("Arial", 1, 100));
 
 		if (!started){
