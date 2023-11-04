@@ -2,9 +2,11 @@ package csi311.pro1.WyattBushman;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class Parser {
@@ -1023,9 +1025,6 @@ public class Parser {
         return Optional.empty();
     }
     
-
-
-
     public Optional<Node> ParseBlockOrStatement() {
         Optional<Node> blockOpt = Optional.ofNullable(ParseBlock());
         if (blockOpt.isPresent()) {
@@ -1284,48 +1283,57 @@ public class Parser {
 
 
     public Optional<FunctionCallNode> ParseFunctionCall() {
-        // We've already peeked and found a WORD token at the start, let's remove and use it.
-        Token functionNameToken = tokenManager.MatchAndRemove(TokenType.WORD).get();
+        Optional<Token> optionalFunctionNameToken = tokenManager.MatchAndRemove(TokenType.WORD);
+        if (!optionalFunctionNameToken.isPresent()) {
+            throwParseException("Expected function name");
+        }
+        Token functionNameToken = optionalFunctionNameToken.get();
         
-        // Expecting an open parenthesis after the function name
-        if (!tokenManager.MatchAndRemove(TokenType.OPEN_PAREN).isPresent()) {
-            throwParseException("Expected '(' after function name in function call");
+        // Define the special functions that can be called without parentheses.
+        Set<TokenType> specialFunctions = EnumSet.of(
+            TokenType.GETLINE,
+            TokenType.PRINT,
+            TokenType.PRINTF,
+            TokenType.EXIT,
+            TokenType.NEXTFILE,
+            TokenType.NEXT
+        );
+
+        List<Node> arguments = new ArrayList<>();
+
+        if (specialFunctions.contains(functionNameToken.getType())) {
+            // If it's a special function and doesn't have an open parenthesis following, treat as no-arg function call
+            if (tokenManager.Peek(0).isEmpty() || tokenManager.Peek(0).get().getType() != TokenType.OPEN_PAREN) {
+                return Optional.of(new FunctionCallNode(functionNameToken.getValue(), arguments));
+            } else {
+                // It's a special function with an open parenthesis, so parse the arguments.
+                tokenManager.MatchAndRemove(TokenType.OPEN_PAREN); // Assuming the next token is OPEN_PAREN
+            }
+        } else {
+            // It's a regular function, so expect an open parenthesis.
+            if (!tokenManager.MatchAndRemove(TokenType.OPEN_PAREN).isPresent()) {
+                throwParseException("Expected '(' after function name in function call");
+            }
         }
 
-        // Parse the arguments list
-        List<Node> arguments = new ArrayList<>();
-        while (!tokenManager.Peek(0).isPresent() || tokenManager.Peek(0).get().getType() != TokenType.CLOSE_PAREN) {
+        while (tokenManager.Peek(0).isPresent() && tokenManager.Peek(0).get().getType() != TokenType.CLOSE_PAREN) {
             Optional<Node> argument = ParseExpression();
             if (!argument.isPresent()) {
                 throwParseException("Expected an expression as an argument in function call");
             }
             arguments.add(argument.get());
-            
-            // If the next token is a comma, consume it and continue to the next argument
+
             if (tokenManager.Peek(0).isPresent() && tokenManager.Peek(0).get().getType() == TokenType.COMMA) {
                 tokenManager.MatchAndRemove(TokenType.COMMA);
             }
         }
 
-        // Expecting a close parenthesis after the arguments list
         if (!tokenManager.MatchAndRemove(TokenType.CLOSE_PAREN).isPresent()) {
             throwParseException("Expected ')' to close the arguments list in function call");
         }
-        FunctionCallNode functionCallNode = new FunctionCallNode(functionNameToken.getValue(), arguments);
-        return Optional.of(functionCallNode);
+
+        return Optional.of(new FunctionCallNode(functionNameToken.getValue(), arguments));
     }
 
-
- 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 }

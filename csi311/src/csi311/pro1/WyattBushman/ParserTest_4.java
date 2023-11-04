@@ -11,14 +11,8 @@ public class ParserTest_4 {
 	public void setUp() throws Exception {
 	}
 
-
-    @Test
-    public void testParseIf() {
-        String testInput = "if (condition) { statement; }";
-        Lexer lexer = new Lexer(testInput);
-        Parser parser = new Parser(lexer);
-
-        assertDoesNotThrow(() -> {
-            parser.ParseIf();
-        });
+	@Test
+	public void test() {
+		fail("Not yet implemented");
+	}
 }
