@@ -39,4 +39,34 @@ public class InterpreterDataType {
 	public void setArrayValue(List<String> arrayValue) {
 		this.arrayValue = arrayValue;
 	}
+
+	public boolean asBoolean() {
+        // Trim the value to ignore leading and trailing whitespace
+        String trimmedValue = value.trim();
+
+        // Check if the value is "true" or "false" directly (if you want to support these as valid booleans)
+        if ("true".equalsIgnoreCase(trimmedValue)) {
+            return true;
+        } else if ("false".equalsIgnoreCase(trimmedValue)) {
+            return false;
+        }
+
+        // Attempt to parse the value as a float
+        try {
+            float num = Float.parseFloat(trimmedValue);
+            // Any non-zero number should return true
+            return num != 0;
+        } catch (NumberFormatException e) {
+            // If it cannot be parsed to a float, check if it's a non-empty string
+            return !trimmedValue.isEmpty();
+        }
+    }
+	
+    public boolean isArray() {
+        return arrayValue != null;
+    }
+    
+    public String asString() {
+        return value; 
+    }
 }

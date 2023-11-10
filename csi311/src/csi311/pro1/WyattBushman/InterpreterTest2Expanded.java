@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.LinkedList;
+import java.util.Optional;
 
 public class InterpreterTest2Expanded extends InterpreterTest2 {
 
@@ -11,6 +12,32 @@ public class InterpreterTest2Expanded extends InterpreterTest2 {
     public void setUp() throws Exception {
         super.setUp();
     }
+    
+    @Test
+    public void testAssignmentAndAddition() {
+        // Creating the nodes for the expression "a = 2 + 2"
+        VariableReferenceNode varRefNode = new VariableReferenceNode("a", Optional.empty());
+        ConstantNode constantTwo = new ConstantNode("2");
+        OperationNode additionNode = new OperationNode(constantTwo, Optional.of(constantTwo), OperationType.ADDITION);
+        AssignmentNode assignmentNode = new AssignmentNode(varRefNode, additionNode);
+
+        // Execute the operation
+        InterpreterDataType result = getInterpreter().GetIDT(assignmentNode, null);
+
+        // Verify that "a" now exists with a value of "4.0" (since float operations might result in "4.0" instead of "4")
+        // Convert the string value to float for comparison
+        float actualValue = Float.parseFloat(getInterpreter().globalVariables.get("a").getValue());
+
+        // Assert equality with a small delta for floating point comparisons
+        assertEquals(4.0f, actualValue, 0.0001f); // Use a small delta for comparing floating point numbers
+
+        // Also, verify the result returned from GetIDT is the expected value, again as a float
+        float resultValue = Float.parseFloat(result.getValue());
+        assertEquals(4.0f, resultValue, 0.0001f);
+    }
+
+
+
 
     @Test
     public void testFunctionExistence() {

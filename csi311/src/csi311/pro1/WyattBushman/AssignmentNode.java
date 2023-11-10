@@ -1,6 +1,6 @@
 package csi311.pro1.WyattBushman;
 
-public class AssignmentNode extends Node {
+public class AssignmentNode extends StatementNode {
     private final Node target;  
     private final Node expression;  
 

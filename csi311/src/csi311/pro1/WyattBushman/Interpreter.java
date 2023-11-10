@@ -4,8 +4,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -176,6 +180,335 @@ public class Interpreter {
 		this.lineManager = lineManager;
 	}
 	
+	//====================================
+
+	
+	public InterpreterDataType GetIDT(Node node, HashMap<String, InterpreterDataType> localVariables) {
+	    if (node instanceof AssignmentNode) {
+	        AssignmentNode assignmentNode = (AssignmentNode) node;
+	        InterpreterDataType value = GetIDT(assignmentNode.getExpression(), localVariables);
+	        // Ensure the target of the assignment is a variable reference node.
+	        if (assignmentNode.getTarget() instanceof VariableReferenceNode) {
+	            VariableReferenceNode varRefNode = (VariableReferenceNode) assignmentNode.getTarget();
+	            // Use a method to set the variable's value within the appropriate scope (local or global).
+	            setVariable(varRefNode, value, localVariables);
+	        } else {
+	            throw new IllegalArgumentException("Assignment to non-variable not supported.");
+	        }
+	        return value;
+	    } else if (node instanceof ConstantNode) {
+	        return new InterpreterDataType(((ConstantNode) node).getValue());
+	    } else if (node instanceof FunctionCallNode) {
+	        FunctionCallNode functionCallNode = (FunctionCallNode) node;
+	        try {
+	            return RunFunctionCall(functionCallNode, localVariables);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    } else if (node instanceof PatternNode) {
+	        throw new UnsupportedOperationException("PatternNode cannot be directly evaluated.");
+	    } else if (node instanceof TernaryNode) {
+	        TernaryNode ternaryNode = (TernaryNode) node;
+	        InterpreterDataType condition = GetIDT(ternaryNode.getCondition(), localVariables);
+	        return condition.asBoolean() ? GetIDT(ternaryNode.getTrueBranch(), localVariables) : GetIDT(ternaryNode.getFalseBranch(), localVariables);
+	    } else if (node instanceof VariableReferenceNode) {
+	        return getVariable((VariableReferenceNode) node, localVariables);
+	    } else if (node instanceof OperationNode) {
+	        try {
+				return evaluateOperation((OperationNode) node, localVariables);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	    } else {
+	        throw new IllegalArgumentException("Unknown node type: " + node.getClass().getSimpleName());
+	    }
+		return null;
+	}
+	
+	private void setVariable(VariableReferenceNode varRefNode, InterpreterDataType value, HashMap<String, InterpreterDataType> localVariables) {
+	    // If the variable reference is an array with an index expression, handle that logic here.
+	    if (varRefNode.getIndexExpression().isPresent()) {
+	        // Evaluate the index expression to get the index key as an integer.
+	        Node indexNode = varRefNode.getIndexExpression().get();
+	        InterpreterDataType indexValue = GetIDT(indexNode, localVariables);
+	        
+	        // Attempt to parse the index as an integer.
+	        int index;
+	        try {
+	            index = Integer.parseInt(indexValue.getValue());
+	        } catch (NumberFormatException e) {
+	            throw new IllegalArgumentException("Array index is not an integer: " + indexValue.getValue());
+	        }
+
+	        // Retrieve the array variable, ensuring it's been declared as an array.
+	        InterpreterDataType arrayVariable = getVariable(varRefNode, localVariables);
+	        if (!arrayVariable.isArray()) {
+	            throw new IllegalArgumentException("Variable " + varRefNode.getName() + " is not an array.");
+	        }
+
+	        // Ensure the index is within the bounds of the array.
+	        List<String> array = arrayVariable.getArrayValue();
+	        if (index < 0 || index >= array.size()) {
+	            // Optionally, you might want to automatically resize the array or handle this condition differently.
+	            throw new IndexOutOfBoundsException("Index " + index + " out of bounds for array " + varRefNode.getName());
+	        }
+
+	        // Set the value in the array at the given index.
+	        array.set(index, value.getValue());
+	    } else {
+	        // If it's not an array, simply assign the value to the variable.
+	        if (localVariables != null && localVariables.containsKey(varRefNode.getName())) {
+	            localVariables.put(varRefNode.getName(), value);
+	        } else {
+	            globalVariables.put(varRefNode.getName(), value);
+	        }
+	    }
+	}
+
+
+
+		private InterpreterDataType getVariable(VariableReferenceNode varRefNode, HashMap<String, InterpreterDataType> localVariables) {
+		    // Check in local variables first, then in global variables.
+		    InterpreterDataType result = localVariables != null ? localVariables.get(varRefNode.getName()) : null;
+		    if (result == null) {
+		        result = globalVariables.get(varRefNode.getName());
+		    }
+		    if (result == null) {
+		        // Variable not found, throw an error or return a default value.
+		        result = new InterpreterDataType(); // default value for non-existent variable
+		    }
+		    return result;
+		}
+
+
+		private InterpreterDataType evaluateOperation(OperationNode opNode, HashMap<String, InterpreterDataType> localVariables) throws Exception {
+		    InterpreterDataType leftValue = GetIDT(opNode.getLeft(), localVariables);
+		    InterpreterDataType rightValue = opNode.getRight().isPresent() ? GetIDT(opNode.getRight().get(), localVariables) : null;
+
+		    switch (opNode.getOperationType()) {
+		        case ADDITION:
+		            float addLeft = Float.parseFloat(leftValue.getValue());
+		            float addRight = Float.parseFloat(rightValue.getValue());
+		            return new InterpreterDataType(String.valueOf(addLeft + addRight));
+		        case SUBTRACTION:
+		            float subLeft = Float.parseFloat(leftValue.getValue());
+		            float subRight = Float.parseFloat(rightValue.getValue());
+		            return new InterpreterDataType(String.valueOf(subLeft - subRight));
+		        case MULTIPLICATION:
+		            float mulLeft = Float.parseFloat(leftValue.getValue());
+		            float mulRight = Float.parseFloat(rightValue.getValue());
+		            return new InterpreterDataType(String.valueOf(mulLeft * mulRight));
+		        case DIVISION:
+		            float divLeft = Float.parseFloat(leftValue.getValue());
+		            float divRight = Float.parseFloat(rightValue.getValue());
+		            if (divRight == 0) {
+		                throw new ArithmeticException("Division by zero.");
+		            }
+		            return new InterpreterDataType(String.valueOf(divLeft / divRight));
+		        case EQUALS:
+		            if (tryParseFloat(leftValue.getValue()) && tryParseFloat(rightValue.getValue())) {
+		                return new InterpreterDataType(Boolean.toString(Float.parseFloat(leftValue.getValue()) == Float.parseFloat(rightValue.getValue())));
+		            } else {
+		                return new InterpreterDataType(Boolean.toString(leftValue.getValue().equals(rightValue.getValue())));
+		            }
+		        case NOT_EQUALS:
+		            if (tryParseFloat(leftValue.getValue()) && tryParseFloat(rightValue.getValue())) {
+		                return new InterpreterDataType(Boolean.toString(Float.parseFloat(leftValue.getValue()) != Float.parseFloat(rightValue.getValue())));
+		            } else {
+		                return new InterpreterDataType(Boolean.toString(!leftValue.getValue().equals(rightValue.getValue())));
+		            }
+		        case LOGICAL_AND:
+		            return new InterpreterDataType(Boolean.toString(leftValue.asBoolean() && rightValue.asBoolean()));
+		        case LOGICAL_OR:
+		            return new InterpreterDataType(Boolean.toString(leftValue.asBoolean() || rightValue.asBoolean()));
+		        case FIELD_SELECTOR:
+		            // Evaluate the left side as an index, then retrieve the value from the interpreter's context
+		            int index = Integer.parseInt(leftValue.getValue());
+		            String fieldValue = retrieveFieldValueByIndex(index, localVariables); // Implement this method
+		            return new InterpreterDataType(fieldValue);
+		        default:
+		            throw new UnsupportedOperationException("Unsupported operation: " + opNode.getOperationType());
+		    }
+		}
+		
+		private boolean tryParseFloat(String value) {
+		    try {
+		        Float.parseFloat(value);
+		        return true;
+		    } catch (NumberFormatException e) {
+		        return false;
+		    }
+		}
+
+		private String retrieveFieldValueByIndex(int index, HashMap<String, InterpreterDataType> globalVariables) {
+		    // Field indices in AWK are 1-based, so "$1" refers to the first field, "$2" to the second, etc.
+		    String fieldKey = "$" + index;
+
+		    // Retrieve the value from the global variables.
+		    InterpreterDataType fieldValue = globalVariables.get(fieldKey);
+		    if (fieldValue == null) {
+		        throw new IllegalArgumentException("Field " + index + " does not exist.");
+		    }
+
+		    // Return the field's value.
+		    return fieldValue.getValue();
+		}
+
+		private InterpreterDataType RunFunctionCall(FunctionCallNode node, HashMap<String, InterpreterDataType> localVariables) throws Exception {
+		    Callable<InterpreterDataType> function = (Callable<InterpreterDataType>) functionDefinitions.get(node.getFunctionName());
+		    if (function == null) {
+		        throw new IllegalArgumentException("Function " + node.getFunctionName() + " is not defined.");
+		    }
+
+		    // Evaluate the arguments
+		    List<InterpreterDataType> evaluatedArgs = new ArrayList<>();
+		    for (Node arg : node.getArguments()) {
+		        evaluatedArgs.add(GetIDT(arg, localVariables));
+		    }
+
+		    // Execute the function with the evaluated arguments
+		    return function.call();
+		}
+		
+	    public ReturnType processStatement(StatementNode stmt, HashMap<String, InterpreterDataType> locals) {
+	        if (stmt instanceof AssignmentNode) {
+	            // Handle assignment logic.
+	            AssignmentNode assignmentNode = (AssignmentNode) stmt;
+	            InterpreterDataType rightValue = GetIDT(assignmentNode.getExpression(), locals);
+	            setVariable((VariableReferenceNode) assignmentNode.getTarget(), rightValue, locals);
+	            return new ReturnType(ReturnType.Status.NORMAL); // Assuming no value needed for normal execution.
+	        } else if (stmt instanceof BreakNode) {
+	            // Handle break logic.
+	            return new ReturnType(ReturnType.Status.BREAK);
+	        } else if (stmt instanceof ContinueNode) {
+	            // Handle continue logic.
+	            return new ReturnType(ReturnType.Status.CONTINUE);
+	        } else if (stmt instanceof DeleteNode) {
+	            DeleteNode deleteNode = (DeleteNode) stmt;
+	            InterpreterDataType arrayVariable = getVariable(new VariableReferenceNode(deleteNode.getArrayName(), Optional.empty()), locals);
+	            if (arrayVariable.isArray()) {
+	                if (deleteNode.getIndexExpression() != null) {
+	                    // Delete specific index
+	                    InterpreterDataType indexValue = GetIDT(deleteNode.getIndexExpression(), locals);
+	                    arrayVariable.getArrayValue().remove(indexValue.asString());
+	                } else {
+	                    // Delete entire array
+	                    arrayVariable.setArrayValue(new ArrayList<>());
+	                }
+	            } else {
+	                throw new IllegalArgumentException("Variable " + deleteNode.getArrayName() + " is not an array.");
+	            }
+	            return new ReturnType(ReturnType.Status.NORMAL); // Placeholder return.
+	        } else if (stmt instanceof DoWhileNode) {
+	            DoWhileNode doWhileNode = (DoWhileNode) stmt;
+	            ReturnType returnType;
+	            do {
+	                returnType = interpretListOfStatements(doWhileNode.getBlock().getStatements(), locals);
+	                if (returnType.getStatus() == ReturnType.Status.BREAK) {
+	                    // Break out of the loop.
+	                    break;
+	                }
+	                // Handle return and continue if necessary.
+	            } while (GetIDT(doWhileNode.getCondition(), locals).asBoolean());
+	            
+	            // After the loop, we return a normal status unless a 'return' was triggered inside the loop.
+	            return returnType.getStatus() == ReturnType.Status.RETURN ? returnType : new ReturnType(ReturnType.Status.NORMAL);
+	        } else if (stmt instanceof ForNode) {
+	            ForNode forNode = (ForNode) stmt;
+
+	            // Process the initialization part of the for loop, if it exists.
+	            if (forNode.getInitialization() != null) {
+	                processStatement((StatementNode) forNode.getInitialization(), locals);
+	            }
+
+	            // Execute the block of statements while the condition is true.
+	            while (GetIDT(forNode.getCondition(), locals).asBoolean()) {
+	                ReturnType blockReturnType = interpretListOfStatements(forNode.getBlock().getStatements(), locals);
+
+	                // Handle a 'break' statement: exit the loop.
+	                if (blockReturnType.getStatus() == ReturnType.Status.BREAK) {
+	                    break;
+	                }
+	                // Handle a 'return' statement: exit the loop and return from the function.
+	                else if (blockReturnType.getStatus() == ReturnType.Status.RETURN) {
+	                    return blockReturnType;
+	                }
+
+	                // Process the iteration part of the for loop, if it exists.
+	                if (forNode.getIteration() != null) {
+	                    processStatement((StatementNode) forNode.getIteration(), locals);
+	                }
+	            }
+	            return new ReturnType(ReturnType.Status.NORMAL);
+	        } else if (stmt instanceof ForEachNode) {
+	            ForEachNode forEachNode = (ForEachNode) stmt;
+	            InterpreterDataType collectionVariable = getVariable(new VariableReferenceNode(forEachNode.getCollection(), Optional.empty()), locals);
+
+	            if (!(collectionVariable instanceof InterpreterArrayDataType)) {
+	                throw new IllegalArgumentException("Variable " + forEachNode.getCollection() + " is not an array.");
+	            }
+
+	            HashMap<String, InterpreterDataType> arrayData = ((InterpreterArrayDataType)collectionVariable).getArrayData();
+	            for (Map.Entry<String, InterpreterDataType> entry : arrayData.entrySet()) {
+	                locals.put(forEachNode.getIterator(), new InterpreterDataType(entry.getKey()));
+	                ReturnType returnType = interpretListOfStatements(forEachNode.getBlock().getStatements(), locals);
+	                if (returnType.getStatus() == ReturnType.Status.BREAK) {
+	                    break;
+	                } else if (returnType.getStatus() == ReturnType.Status.RETURN) {
+	                    return returnType;
+	                }
+	            }
+	            return new ReturnType(ReturnType.Status.NORMAL);
+	        } else if (stmt instanceof FunctionCallNode) {
+	            FunctionCallNode functionCallNode = (FunctionCallNode) stmt;
+	            InterpreterDataType result = null;
+				try {
+					result = RunFunctionCall(functionCallNode, locals);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+	            return new ReturnType(ReturnType.Status.NORMAL, result.getValue());
+	        } else if (stmt instanceof IfNode) {
+	            IfNode ifNode = (IfNode) stmt;
+	            if (GetIDT(ifNode.getCondition(), locals).asBoolean()) {
+	                return interpretListOfStatements(ifNode.getBlock().getStatements(), locals);
+	            } else if (ifNode.getElseBranch().isPresent()) {
+	                return interpretListOfStatements(ifNode.getElseBranch().get().getBlock().getStatements(), locals);
+	            }
+	            return new ReturnType(ReturnType.Status.NORMAL);
+	        } else if (stmt instanceof ReturnNode) {
+	            ReturnNode returnNode = (ReturnNode) stmt;
+	            InterpreterDataType value = GetIDT(returnNode.getExpression(), locals);
+	            return new ReturnType(ReturnType.Status.RETURN, value.getValue());
+	        } else if (stmt instanceof WhileNode) {
+	            WhileNode whileNode = (WhileNode) stmt;
+	            while (GetIDT(whileNode.getCondition(), locals).asBoolean()) {
+	                ReturnType returnType = interpretListOfStatements(whileNode.getBlock().getStatements(), locals);
+	                if (returnType.getStatus() == ReturnType.Status.BREAK) {
+	                    break;
+	                } else if (returnType.getStatus() == ReturnType.Status.RETURN) {
+	                    return returnType;
+	                }
+	                // Continue to the next iteration
+	            }
+	            return new ReturnType(ReturnType.Status.NORMAL);
+	        } else {
+	            // Handle unknown statement types.
+	            throw new IllegalArgumentException("Unknown node type encountered: " + stmt.getClass().getSimpleName());
+	        }
+	    }
+
+	    public ReturnType interpretListOfStatements(LinkedList<StatementNode> statements, HashMap<String, InterpreterDataType> locals) {
+	        for (StatementNode stmt : statements) {
+	            ReturnType result = processStatement(stmt, locals);
+	            // If the result is not normal, it means we should either break the loop, continue, or return.
+	            if (result.getStatus() != ReturnType.Status.NORMAL) {
+	                return result; // This will propagate break, continue, or return up the call stack.
+	            }
+	        }
+	        return new ReturnType(ReturnType.Status.NORMAL); 
+	    }
+
 
 
 	// =============  Inner class LineManager =================================
