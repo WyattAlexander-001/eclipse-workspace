@@ -6,11 +6,23 @@ public class FunctionDefinitionNode extends Node {
     private String functionName;
     private LinkedList<String> parameters;
     private LinkedList<StatementNode> statements;
+    private boolean isVariadic;
 
     public FunctionDefinitionNode(String name) {
         this.functionName = name;
         this.parameters = new LinkedList<>();
         this.statements = new LinkedList<>();
+    }
+    
+    public FunctionDefinitionNode(String name, boolean isVariadic) {
+        this.functionName = name;
+        this.parameters = new LinkedList<>();
+        this.statements = new LinkedList<>();
+        this.isVariadic = isVariadic;
+    }
+    
+    public boolean isVariadic() {
+        return isVariadic;
     }
 
     @Override

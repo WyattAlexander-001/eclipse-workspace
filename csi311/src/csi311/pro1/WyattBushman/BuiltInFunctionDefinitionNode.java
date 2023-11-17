@@ -17,10 +17,12 @@ public class BuiltInFunctionDefinitionNode extends FunctionDefinitionNode {
         this.executeFunction = executeFunction;
         this.isVariadic = isVariadic;
     }
-
-    public String execute(HashMap<String, InterpreterDataType> parameters) {
-        return this.executeFunction.apply(parameters);
+   
+    public InterpreterDataType execute(HashMap<String, InterpreterDataType> parameters) {
+        String result = this.executeFunction.apply(parameters);
+        return new InterpreterDataType(result);
     }
+
 
     public boolean isVariadic() {
         return isVariadic;

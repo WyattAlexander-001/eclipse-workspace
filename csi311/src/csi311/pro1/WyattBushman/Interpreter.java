@@ -274,7 +274,6 @@ public class Interpreter {
 		        result = globalVariables.get(varRefNode.getName());
 		    }
 		    if (result == null) {
-		        // Variable not found, throw an error or return a default value.
 		        result = new InterpreterDataType(); // default value for non-existent variable
 		    }
 		    return result;
@@ -489,7 +488,6 @@ public class Interpreter {
 	                } else if (returnType.getStatus() == ReturnType.Status.RETURN) {
 	                    return returnType;
 	                }
-	                // Continue to the next iteration
 	            }
 	            return new ReturnType(ReturnType.Status.NORMAL);
 	        } else {
@@ -501,15 +499,88 @@ public class Interpreter {
 	    public ReturnType interpretListOfStatements(LinkedList<StatementNode> statements, HashMap<String, InterpreterDataType> locals) {
 	        for (StatementNode stmt : statements) {
 	            ReturnType result = processStatement(stmt, locals);
-	            // If the result is not normal, it means we should either break the loop, continue, or return.
 	            if (result.getStatus() != ReturnType.Status.NORMAL) {
 	                return result; // This will propagate break, continue, or return up the call stack.
 	            }
 	        }
 	        return new ReturnType(ReturnType.Status.NORMAL); 
 	    }
+	    
+	    //============== Int 4 DONE ===============//
+	    
+	    public void interpretProgram(ProgramNode programNode) {
+	        // Execute BEGIN blocks
+	        for (BlockNode block : programNode.getBeginBlocks()) {
+	            interpretBlock(block);
+	        }
 
+	        // Execute main blocks (assuming line processing is part of these blocks)
+	        while (lineManager.splitAndAssign()) { // Process each line
+	            for (BlockNode block : programNode.getBlocks()) {
+	                interpretBlock(block);
+	            }
+	        }
 
+	        // Execute END blocks
+	        for (BlockNode block : programNode.getEndBlocks()) {
+	            interpretBlock(block);
+	        }
+	    }
+
+	    
+	    public ReturnType interpretBlock(BlockNode block) {
+	        if (block.getCondition().isEmpty() || GetIDT(block.getCondition().get(), globalVariables).asBoolean()) {
+	            return interpretListOfStatements(block.getStatements(), globalVariables);
+	        }
+	        return new ReturnType(ReturnType.Status.NORMAL);
+	    }
+	    
+	    private InterpreterDataType runFunctionCall(FunctionCallNode node, HashMap<String, InterpreterDataType> locals) throws Exception {
+	        FunctionDefinitionNode functionDef = functionDefinitions.get(node.getFunctionName());
+	        if (functionDef == null) {
+	            throw new IllegalArgumentException("Function " + node.getFunctionName() + " is not defined.");
+	        }
+
+	        // Map parameters
+	        HashMap<String, InterpreterDataType> paramMap = new HashMap<>();
+	        List<String> paramNames = functionDef.getParameters();
+	        List<Node> arguments = node.getArguments();
+
+	        if (!functionDef.isVariadic() && paramNames.size() != arguments.size()) {
+	            throw new IllegalArgumentException("Parameter count mismatch for function " + node.getFunctionName());
+	        }
+
+	        for (int i = 0; i < paramNames.size(); i++) {
+	            paramMap.put(paramNames.get(i), GetIDT(arguments.get(i), locals));
+	        }
+
+	        // Handle variadic arguments
+	        if (functionDef.isVariadic() && arguments.size() >= paramNames.size()) {
+	            List<InterpreterDataType> variadicArgs = new ArrayList<>();
+	            for (int i = paramNames.size(); i < arguments.size(); i++) {
+	                variadicArgs.add(GetIDT(arguments.get(i), locals));
+	            }
+	            paramMap.put("variadic", new InterpreterArrayDataType(variadicArgs));
+	        }
+
+	     // Execute the function
+	        if (functionDef instanceof BuiltInFunctionDefinitionNode) {
+	            // Execute the built-in function
+	            return ((BuiltInFunctionDefinitionNode) functionDef).execute(paramMap);
+	        } else {
+	            // Execute the user-defined function
+	            ReturnType returnType = interpretListOfStatements(functionDef.getStatements(), paramMap);
+	            
+	            // Check if the function execution returned a value
+	            if (returnType.getStatus() == ReturnType.Status.RETURN && returnType.getValue() != null) {
+	                // Function returned a value, wrap it in an InterpreterDataType and return
+	                return new InterpreterDataType(returnType.getValue());
+	            } else {
+	                // Function did not return a value, or it was a different type of return (e.g., NORMAL, BREAK, CONTINUE)
+	                return new InterpreterDataType(); // Return a default or empty InterpreterDataType
+	            }
+	        }
+	    }
 
 	// =============  Inner class LineManager =================================
     public class LineManager {

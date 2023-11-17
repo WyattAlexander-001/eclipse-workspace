@@ -119,46 +119,66 @@ public class Parser {
         return type == TokenType.WORD;
     }
 
+//    public BlockNode ParseBlock() {
+//        BlockNode blockNode = new BlockNode();
+//        AcceptSeparators();
+//        if(!tokenManager.MatchAndRemove(TokenType.OPEN_CURLY).isPresent()) {
+//            throw new RuntimeException("Expected opening curly brace");
+//        }
+//        
+//        // Handle empty block
+//        if (tokenManager.Peek(0).get().getType() == TokenType.CLOSE_CURLY) {
+//            tokenManager.MatchAndRemove(TokenType.CLOSE_CURLY);
+//            return blockNode;
+//        }
+//
+//        while (tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() != TokenType.CLOSE_CURLY) {
+//            Token currentToken = tokenManager.Peek(0).get();
+//            if (currentToken.getType() == TokenType.WORD) {
+//                tokenManager.MatchAndRemove(TokenType.WORD);
+//            } else if(currentToken.getType() == TokenType.SEPARATOR) {
+//                tokenManager.MatchAndRemove(TokenType.SEPARATOR);
+//            } else {
+//                throw new RuntimeException("Unexpected token inside block: " + currentToken.getValue());
+//            }
+//        }
+//
+//        AcceptSeparators();
+//
+//        if(!tokenManager.MatchAndRemove(TokenType.CLOSE_CURLY).isPresent()) {
+//            throw new RuntimeException("Expected closing curly brace");
+//        }
+//
+//        return blockNode;
+//    }
+
     public BlockNode ParseBlock() {
         BlockNode blockNode = new BlockNode();
         AcceptSeparators();
-        if(!tokenManager.MatchAndRemove(TokenType.OPEN_CURLY).isPresent()) {
+        if (!tokenManager.MatchAndRemove(TokenType.OPEN_CURLY).isPresent()) {
             throw new RuntimeException("Expected opening curly brace");
         }
         
-        // Handle empty block
-        if (tokenManager.Peek(0).get().getType() == TokenType.CLOSE_CURLY) {
-            tokenManager.MatchAndRemove(TokenType.CLOSE_CURLY);
-            return blockNode;
-        }
-
         while (tokenManager.MoreTokens() && tokenManager.Peek(0).get().getType() != TokenType.CLOSE_CURLY) {
-            Token currentToken = tokenManager.Peek(0).get();
-            if (currentToken.getType() == TokenType.WORD) {
-                tokenManager.MatchAndRemove(TokenType.WORD);
-            } else if(currentToken.getType() == TokenType.SEPARATOR) {
-                tokenManager.MatchAndRemove(TokenType.SEPARATOR);
-            } else {
-                throw new RuntimeException("Unexpected token inside block: " + currentToken.getValue());
+            Optional<Node> statementNode = ParseOperation(); // Attempt to parse a statement
+            if (!statementNode.isPresent()) {
+                throw new RuntimeException("Expected a valid statement inside block");
             }
+            blockNode.addStatement((StatementNode)statementNode.get()); // Add parsed statement to the block
+            AcceptSeparators();
         }
 
-        AcceptSeparators();
-
-        if(!tokenManager.MatchAndRemove(TokenType.CLOSE_CURLY).isPresent()) {
+        if (!tokenManager.MatchAndRemove(TokenType.CLOSE_CURLY).isPresent()) {
             throw new RuntimeException("Expected closing curly brace");
         }
 
         return blockNode;
     }
-   
+
+    
     public TokenManager getTokenManager() {
         return tokenManager;
     }
-    
-   
-    
-
     
     //Helper, no need to do tokenManage.MatchAndRemove()...Need to clean up alot of code...
     private Optional<Token> matchAndRemove(TokenType type) {

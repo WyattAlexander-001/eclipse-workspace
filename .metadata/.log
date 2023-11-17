@@ -6,13 +6,13 @@ BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
 Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/absinthe/.eclipse_keyring
 Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/absinthe/.eclipse_keyring
 
-This is a continuation of log file /Users/absinthe/eclipse-workspace/.metadata/.bak_0.log
-Created Time: 2023-10-12 21:23:17.742
+This is a continuation of log file /Users/absinthe/eclipse-workspace/.metadata/.bak_2.log
+Created Time: 2023-11-16 21:44:19.335
 
-!ENTRY org.eclipse.lsp4e 4 0 2023-10-12 21:23:17.742
+!ENTRY org.eclipse.lsp4e 4 0 2023-11-16 21:44:19.335
 !MESSAGE Exception occurred while fetching the content type from the buffer
 !STACK 1
-org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500.
+org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188.
 	at org.eclipse.core.internal.filesystem.Policy.error(Policy.java:48)
 	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:423)
 	at org.eclipse.core.internal.filebuffers.FileStoreTextFileBuffer.getContentType(FileStoreTextFileBuffer.java:293)
@@ -161,16 +161,16 @@ org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
-Caused by: java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500 (No such file or directory)
+Caused by: java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188 (No such file or directory)
 	at java.base/java.io.FileInputStream.open0(Native Method)
 	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
 	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
 	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:418)
 	... 146 more
-!SUBENTRY 1 org.eclipse.core.filesystem 4 269 2023-10-12 21:23:17.743
-!MESSAGE File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500.
+!SUBENTRY 1 org.eclipse.core.filesystem 4 269 2023-11-16 21:44:19.337
+!MESSAGE File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188.
 !STACK 0
-java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500 (No such file or directory)
+java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188 (No such file or directory)
 	at java.base/java.io.FileInputStream.open0(Native Method)
 	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
 	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
@@ -322,10 +322,10 @@ java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plug
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
 
-!ENTRY org.eclipse.lsp4e 4 0 2023-10-12 21:23:17.744
+!ENTRY org.eclipse.lsp4e 4 0 2023-11-16 21:44:19.339
 !MESSAGE Exception occurred while fetching the content type from the buffer
 !STACK 1
-org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500.
+org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188.
 	at org.eclipse.core.internal.filesystem.Policy.error(Policy.java:48)
 	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:423)
 	at org.eclipse.core.internal.filebuffers.FileStoreTextFileBuffer.getContentType(FileStoreTextFileBuffer.java:293)
@@ -474,16 +474,16 @@ org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
-Caused by: java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500 (No such file or directory)
+Caused by: java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188 (No such file or directory)
 	at java.base/java.io.FileInputStream.open0(Native Method)
 	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
 	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
 	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:418)
 	... 146 more
-!SUBENTRY 1 org.eclipse.core.filesystem 4 269 2023-10-12 21:23:17.744
-!MESSAGE File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500.
+!SUBENTRY 1 org.eclipse.core.filesystem 4 269 2023-11-16 21:44:19.340
+!MESSAGE File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188.
 !STACK 0
-java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500 (No such file or directory)
+java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188 (No such file or directory)
 	at java.base/java.io.FileInputStream.open0(Native Method)
 	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
 	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
@@ -635,10 +635,10 @@ java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plug
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
 
-!ENTRY org.eclipse.lsp4e 4 0 2023-10-12 21:23:17.768
+!ENTRY org.eclipse.lsp4e 4 0 2023-11-16 21:44:19.412
 !MESSAGE Exception occurred while fetching the content type from the buffer
 !STACK 1
-org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500.
+org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188.
 	at org.eclipse.core.internal.filesystem.Policy.error(Policy.java:48)
 	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:423)
 	at org.eclipse.core.internal.filebuffers.FileStoreTextFileBuffer.getContentType(FileStoreTextFileBuffer.java:293)
@@ -801,16 +801,16 @@ org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
-Caused by: java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500 (No such file or directory)
+Caused by: java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188 (No such file or directory)
 	at java.base/java.io.FileInputStream.open0(Native Method)
 	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
 	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
 	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:418)
 	... 160 more
-!SUBENTRY 1 org.eclipse.core.filesystem 4 269 2023-10-12 21:23:17.770
-!MESSAGE File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500.
+!SUBENTRY 1 org.eclipse.core.filesystem 4 269 2023-11-16 21:44:19.414
+!MESSAGE File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188.
 !STACK 0
-java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500 (No such file or directory)
+java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188 (No such file or directory)
 	at java.base/java.io.FileInputStream.open0(Native Method)
 	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
 	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
@@ -976,10 +976,10 @@ java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plug
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
 
-!ENTRY org.eclipse.lsp4e 4 0 2023-10-12 21:23:17.771
+!ENTRY org.eclipse.lsp4e 4 0 2023-11-16 21:44:19.416
 !MESSAGE Exception occurred while fetching the content type from the buffer
 !STACK 1
-org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500.
+org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188.
 	at org.eclipse.core.internal.filesystem.Policy.error(Policy.java:48)
 	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:423)
 	at org.eclipse.core.internal.filebuffers.FileStoreTextFileBuffer.getContentType(FileStoreTextFileBuffer.java:293)
@@ -1142,16 +1142,16 @@ org.eclipse.core.runtime.CoreException: File not found: /Users/absinthe/eclipse-
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
-Caused by: java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500 (No such file or directory)
+Caused by: java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188 (No such file or directory)
 	at java.base/java.io.FileInputStream.open0(Native Method)
 	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
 	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
 	at org.eclipse.core.internal.filesystem.local.LocalFile.openInputStream(LocalFile.java:418)
 	... 160 more
-!SUBENTRY 1 org.eclipse.core.filesystem 4 269 2023-10-12 21:23:17.771
-!MESSAGE File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500.
+!SUBENTRY 1 org.eclipse.core.filesystem 4 269 2023-11-16 21:44:19.416
+!MESSAGE File not found: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188.
 !STACK 0
-java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_1257032500 (No such file or directory)
+java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plugins/org.eclipse.ui.editors/_501367188 (No such file or directory)
 	at java.base/java.io.FileInputStream.open0(Native Method)
 	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
 	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
@@ -1295,107 +1295,6 @@ java.io.FileNotFoundException: /Users/absinthe/eclipse-workspace/.metadata/.plug
 	at org.eclipse.swt.internal.cocoa.OS.objc_msgSend(Native Method)
 	at org.eclipse.swt.internal.cocoa.NSApplication.sendEvent(NSApplication.java:117)
 	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3963)
-	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
-	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
-	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
-	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
-	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:644)
-	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
-	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:551)
-	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:156)
-	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
-	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:203)
-	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
-	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
-	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
-	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:659)
-	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:596)
-	at org.eclipse.equinox.launcher.Main.run(Main.java:1467)
-
-!ENTRY org.eclipse.jdt.debug 4 125 2023-10-13 21:10:58.355
-!MESSAGE Internal error logged from JDI Debug: 
-!STACK 1
-org.eclipse.debug.core.DebugException: Breakpoint does not have an associated marker.
-	at org.eclipse.debug.core.model.Breakpoint.ensureMarker(Breakpoint.java:297)
-	at org.eclipse.jdt.internal.debug.core.breakpoints.JavaBreakpoint.getTypeName(JavaBreakpoint.java:926)
-	at org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget.lambda$1(JDIDebugTarget.java:1387)
-	at org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget.supportsResource(JDIDebugTarget.java:1431)
-	at org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget.supportsBreakpoint(JDIDebugTarget.java:1387)
-	at org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget.breakpointRemoved(JDIDebugTarget.java:1672)
-	at org.eclipse.debug.internal.core.BreakpointManager$BreakpointNotifier.run(BreakpointManager.java:1030)
-	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
-	at org.eclipse.debug.internal.core.BreakpointManager$BreakpointNotifier.notify(BreakpointManager.java:1054)
-	at org.eclipse.debug.internal.core.BreakpointManager.fireUpdate(BreakpointManager.java:962)
-	at org.eclipse.debug.internal.core.BreakpointManager.removeBreakpoints(BreakpointManager.java:509)
-	at org.eclipse.debug.internal.core.BreakpointManager$BreakpointManagerVisitor.update(BreakpointManager.java:758)
-	at org.eclipse.debug.internal.core.BreakpointManager.resourceChanged(BreakpointManager.java:695)
-	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:307)
-	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
-	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:297)
-	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:160)
-	at org.eclipse.core.internal.resources.Workspace.broadcastBuildEvent(Workspace.java:374)
-	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:164)
-	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:255)
-	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
-!SUBENTRY 1 org.eclipse.debug.core 4 5012 2023-10-13 21:10:58.358
-!MESSAGE Breakpoint does not have an associated marker.
-
-!ENTRY org.eclipse.jdt.debug 4 125 2023-10-13 21:10:58.371
-!MESSAGE Internal error logged from JDI Debug: 
-!STACK 1
-org.eclipse.debug.core.DebugException: Breakpoint does not have an associated marker.
-	at org.eclipse.debug.core.model.Breakpoint.ensureMarker(Breakpoint.java:297)
-	at org.eclipse.jdt.internal.debug.core.breakpoints.JavaBreakpoint.getTypeName(JavaBreakpoint.java:926)
-	at org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget.lambda$1(JDIDebugTarget.java:1387)
-	at org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget.supportsResource(JDIDebugTarget.java:1431)
-	at org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget.supportsBreakpoint(JDIDebugTarget.java:1387)
-	at org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget.breakpointRemoved(JDIDebugTarget.java:1672)
-	at org.eclipse.debug.internal.core.BreakpointManager$BreakpointNotifier.run(BreakpointManager.java:1030)
-	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
-	at org.eclipse.debug.internal.core.BreakpointManager$BreakpointNotifier.notify(BreakpointManager.java:1054)
-	at org.eclipse.debug.internal.core.BreakpointManager.fireUpdate(BreakpointManager.java:962)
-	at org.eclipse.debug.internal.core.BreakpointManager.removeBreakpoints(BreakpointManager.java:509)
-	at org.eclipse.debug.internal.core.BreakpointManager$BreakpointManagerVisitor.update(BreakpointManager.java:758)
-	at org.eclipse.debug.internal.core.BreakpointManager.resourceChanged(BreakpointManager.java:695)
-	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:307)
-	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
-	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:297)
-	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:160)
-	at org.eclipse.core.internal.resources.Workspace.broadcastBuildEvent(Workspace.java:374)
-	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:164)
-	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:255)
-	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
-!SUBENTRY 1 org.eclipse.debug.core 4 5012 2023-10-13 21:10:58.371
-!MESSAGE Breakpoint does not have an associated marker.
-
-!ENTRY org.eclipse.ui 4 0 2023-10-29 16:22:35.613
-!MESSAGE Unhandled event loop exception
-!STACK 0
-java.lang.NullPointerException: Cannot read field "contexts" because "this.display" is null
-	at org.eclipse.swt.widgets.Control.resetVisibleRegion(Control.java:3390)
-	at org.eclipse.swt.widgets.Canvas.resetVisibleRegion(Canvas.java:371)
-	at org.eclipse.swt.widgets.Shell.invalidateVisibleRegion(Shell.java:1278)
-	at org.eclipse.swt.widgets.Shell.setWindowVisible(Shell.java:2147)
-	at org.eclipse.swt.widgets.Shell.setVisible(Shell.java:2071)
-	at org.eclipse.jface.text.AbstractInformationControl.setVisible(AbstractInformationControl.java:494)
-	at org.eclipse.jface.text.AbstractInformationControlManager.hideInformationControl(AbstractInformationControlManager.java:1212)
-	at org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter$MultipleHyperlinkHoverManager.hideInformationControl(MultipleHyperlinkPresenter.java:626)
-	at org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter$LinkListInformationControl.openSelectedLink(MultipleHyperlinkPresenter.java:352)
-	at org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter$LinkListInformationControl$4.mouseUp(MultipleHyperlinkPresenter.java:326)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:224)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
-	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4604)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1524)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1547)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1532)
-	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1325)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4390)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3966)
 	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
 	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:338)
 	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
