@@ -375,7 +375,7 @@ public class Interpreter {
 	            AssignmentNode assignmentNode = (AssignmentNode) stmt;
 	            InterpreterDataType rightValue = GetIDT(assignmentNode.getExpression(), locals);
 	            setVariable((VariableReferenceNode) assignmentNode.getTarget(), rightValue, locals);
-	            return new ReturnType(ReturnType.Status.NORMAL); // Assuming no value needed for normal execution.
+	            return new ReturnType(ReturnType.Status.NORMAL); 
 	        } else if (stmt instanceof BreakNode) {
 	            // Handle break logic.
 	            return new ReturnType(ReturnType.Status.BREAK);
@@ -500,7 +500,7 @@ public class Interpreter {
 	        for (StatementNode stmt : statements) {
 	            ReturnType result = processStatement(stmt, locals);
 	            if (result.getStatus() != ReturnType.Status.NORMAL) {
-	                return result; // This will propagate break, continue, or return up the call stack.
+	                return result; 
 	            }
 	        }
 	        return new ReturnType(ReturnType.Status.NORMAL); 
@@ -514,7 +514,6 @@ public class Interpreter {
 	            interpretBlock(block);
 	        }
 
-	        // Execute main blocks (assuming line processing is part of these blocks)
 	        while (lineManager.splitAndAssign()) { // Process each line
 	            for (BlockNode block : programNode.getBlocks()) {
 	                interpretBlock(block);

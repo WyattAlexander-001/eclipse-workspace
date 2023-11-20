@@ -3,6 +3,9 @@ package csi311.pro1.WyattBushman;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import csi311.pro1.WyattBushman.Interpreter.LineManager;
+
 import java.util.LinkedList;
 import java.util.Optional;
 
@@ -75,4 +78,31 @@ public class InterpreterTest2Expanded extends InterpreterTest2 {
         assertEquals("split", splitFunction.getFunctionName());
         assertTrue(splitFunction instanceof BuiltInFunctionDefinitionNode);
     }
+    
+//    @Test
+//    public void testInterpretProgram() throws Exception {
+//        // Create a simple program with BEGIN and END blocks
+//        ProgramNode programNode = new ProgramNode();
+//        BlockNode beginBlock = new BlockNode();
+//        BlockNode endBlock = new BlockNode();
+//
+//        // Add statements to BEGIN and END blocks that modify a global variable
+//        beginBlock.addStatement(new AssignmentNode(new VariableReferenceNode("testBegin", Optional.empty()), new ConstantNode("1")));
+//        endBlock.addStatement(new AssignmentNode(new VariableReferenceNode("testEnd", Optional.empty()), new ConstantNode("1")));
+//
+//        programNode.addBeginBlock(beginBlock);
+//        programNode.addEndBlock(endBlock);
+//
+//        // Run the interpreter
+//        Interpreter interpreter = new Interpreter(programNode, null);
+//        interpreter.interpretProgram(programNode);
+//
+//        // Assert that the BEGIN and END blocks executed by checking the global variables
+//        assertEquals("1", interpreter.globalVariables.get("testBegin").getValue());
+//        assertEquals("1", interpreter.globalVariables.get("testEnd").getValue());
+//    }
+
+
+
+   
 }
