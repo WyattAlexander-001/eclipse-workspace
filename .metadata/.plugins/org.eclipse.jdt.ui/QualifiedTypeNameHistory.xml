@@ -12,7 +12,6 @@
     <fullyQualifiedTypeName name="csi213.Assignment1.WyattBushman.Payroll"/>
     <fullyQualifiedTypeName name="java.nio.file.Path"/>
     <fullyQualifiedTypeName name="java.io.File"/>
-    <fullyQualifiedTypeName name="java.util.Collections"/>
     <fullyQualifiedTypeName name="java.util.Collection"/>
     <fullyQualifiedTypeName name="javax.swing.JFrame"/>
     <fullyQualifiedTypeName name="javax.swing.JPanel"/>
@@ -41,4 +40,6 @@
     <fullyQualifiedTypeName name="csi311.pro1.WyattBushman.Interpreter.LineManager"/>
     <fullyQualifiedTypeName name="java.util.HashMap"/>
     <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.util.Collections"/>
+    <fullyQualifiedTypeName name="java.util.concurrent.Semaphore"/>
 </qualifiedTypeNameHistroy>

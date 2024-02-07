@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="ParseBlock"/>
+		<item key="selection" value="current"/>
 		<item key="wrap" value="true"/>
-		<item key="casesensitive" value="false"/>
+		<item key="casesensitive" value="true"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="current"/>
+			<item value="currentPro"/>
+			<item value="stop"/>
+			<item value="start"/>
+			<item value="scheduler.currentlyRunning.run();"/>
+			<item value="scheduler.cur"/>
+			<item value="scheduler.cu"/>
+			<item value="bit"/>
 			<item value="ParseBlock"/>
 			<item value="processState"/>
 			<item value="evaluateOpe"/>
@@ -15,17 +23,11 @@
 			<item value="5"/>
 			<item value="score"/>
 			<item value="3"/>
-			<item value="parseblock"/>
-			<item value="parsee"/>
-			<item value="parseStatement"/>
-			<item value="parseState"/>
-			<item value="parse"/>
-			<item value="parsestate"/>
-			<item value="flappyBird"/>
-			<item value="in"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>
+			<item value="testBit"/>
+			<item value="test"/>
 			<item value="scanner"/>
 			<item value="float"/>
 			<item value="double"/>
@@ -38,13 +40,11 @@
 			<item value="constructor_example"/>
 			<item value="secondRangeLength"/>
 			<item value="SecondRangeLength"/>
-			<item value="firstRangeLength"/>
-			<item value="secondRangeEnd"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="504"/>
-		<item key="DIALOG_Y_ORIGIN" value="591"/>
+		<item key="DIALOG_Y_ORIGIN" value="578"/>
 		<item key="DIALOG_WIDTH" value="336"/>
 		<item key="DIALOG_HEIGHT" value="402"/>
 		<item key="DIALOG_FONT_NAME" value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont"/>
