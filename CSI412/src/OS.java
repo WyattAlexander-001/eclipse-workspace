@@ -73,6 +73,12 @@ public class OS {
 	public static void setReturnValue(Object returnValue) {
 		OS.returnValue = returnValue;
 	}
+	
+	public static void Sleep(int milliseconds) {
+	    setKernelCall(CallType.SLEEP, milliseconds); 
+	    switchToKernel(); 
+	}
+
 
 }
 

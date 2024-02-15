@@ -34,6 +34,9 @@ public class Kernel implements Runnable {
 	                        switchProcess(); 
 //	                        System.out.println("SWITCH_PROCESS handled");
 	                        break;
+	                    case SLEEP: 
+	                        int milliseconds = (Integer)OS.getParameters().get(0); // Retrieve sleep duration
+	                        sleepProcess(milliseconds); // Method to manage the sleep request
 					default:
 						break;
 	                }
@@ -42,7 +45,7 @@ public class Kernel implements Runnable {
                 // Run the next process from the scheduler
                 if (scheduler.currentlyRunning != null) {
 //                	System.out.println("Running process: " + scheduler.currentlyRunning);
-                	scheduler.currentlyRunning.start();
+                	scheduler.currentlyRunning.getUserlandProcess().start(); 
                 } else {
 //                	System.out.println("No process currently running");
                 }
@@ -73,5 +76,17 @@ public class Kernel implements Runnable {
 	public void setMaxPid(int maxPid) {
 		this.maxPid = maxPid;
 	}
+	
+    private PCB getCurrentPCB() {
+        // Logic to return the currently executing PCB
+        return null; // Placeholder for actual implementation
+    }
+	
+	
+	
+    private void sleepProcess(int milliseconds) {
+        scheduler.sleep(milliseconds); 
+    }
+
 
 }
