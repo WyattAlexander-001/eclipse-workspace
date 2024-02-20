@@ -1,19 +1,18 @@
 import java.util.ArrayList;
 
 public class OS {
-    private static Kernel kernel; // The Kernel instance
+    private static Kernel kernel; 
     private static CallType currentCall = CallType.NONE;
     private static ArrayList<Object> parameters = new ArrayList<>();
     private static Object returnValue;
     
     
 
-    // Method to initialize the OS and Kernel
     public static void startup(UserlandProcess init) {
         kernel = new Kernel();
-        createProcess(init); // Add the initial process
-        createProcess(new IdleProcess()); // Add the IdleProcess
-        switchToKernel(); // Start the kernel processing
+        createProcess(init); 
+        createProcess(new IdleProcess()); 
+        switchToKernel(); 
     }
 
     public static void createProcess(UserlandProcess up) {

@@ -5,9 +5,17 @@ public class PCB {
     private int pid; // Process ID
     private UserlandProcess userlandProcess; // Associated userland process
     private Instant wakeUpTime;
+    private Priority priority; // Enum for process priority
+    private int timeoutCounter = 0; // Counter for timeouts leading to potential demotion
 
     public PCB(UserlandProcess up) {
         this.userlandProcess = up;
+        this.pid = nextPid++; 
+    }
+    
+    public PCB(UserlandProcess up, Priority priority) {
+        this.userlandProcess = up;
+        this.priority = priority;
         this.pid = nextPid++; // Assign and increment the PID
     }
 
@@ -23,14 +31,13 @@ public class PCB {
     }
 
     public boolean isDone() {
-        return userlandProcess.isDone(); // Check if the userland process has completed execution
+        return userlandProcess.isDone(); 
     }
 
     public void run() {
-        userlandProcess.start(); // Start the userland process
+        userlandProcess.start(); 
     }
 
-    // Getters for PID and UserlandProcess, if needed
     public int getPid() {
         return pid;
     }
@@ -39,18 +46,52 @@ public class PCB {
         return userlandProcess;
     }
     
-    // Method to set the wake-up time
     public void setWakeUpTime(Instant wakeUpTime) {
         this.wakeUpTime = wakeUpTime;
     }
 
-    // Method to get the wake-up time
     public Instant getWakeUpTime() {
         return wakeUpTime;
     }
 
-    // Method to check if the process is sleeping
     public boolean isSleeping() {
         return wakeUpTime != null && Instant.now().isBefore(wakeUpTime);
     }
+    
+    public void incrementTimeoutCounter() {
+        timeoutCounter++;
+    }
+
+    public void checkAndDemote() {
+        if (timeoutCounter > 5) { // Arbitrary threshold for demotion
+            switch (priority) {
+                case REAL_TIME:
+                    priority = Priority.INTERACTIVE;
+                    break;
+                case INTERACTIVE:
+                    priority = Priority.BACKGROUND;
+                    break;
+                default:
+                    break;
+            }
+            timeoutCounter = 0; // Reset the counter after demotion
+        }
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public int getTimeoutCounter() {
+        return timeoutCounter;
+    }
+
+    public void resetTimeoutCounter() {
+        timeoutCounter = 0;
+    }
+
 }

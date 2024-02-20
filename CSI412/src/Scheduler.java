@@ -49,7 +49,7 @@ public class Scheduler {
     }
 
     public void createProcess(UserlandProcess up) {
-        PCB pcb = new PCB(up); // Assuming PCB constructor takes a UserlandProcess
+        PCB pcb = new PCB(up); 
         processes.add(pcb);
 
         if (currentlyRunning == null) {
@@ -57,7 +57,7 @@ public class Scheduler {
         }
     }
 
-    public void Sleep(int milliseconds) {
+    public void sleep(int milliseconds) {
         if (currentlyRunning != null) {
             Instant wakeUpTime = clock.instant().plusMillis(milliseconds);
             currentlyRunning.setWakeUpTime(wakeUpTime); // Assume PCB has a setWakeUpTime method
@@ -77,14 +77,7 @@ public class Scheduler {
         processes.addAll(toWakeUp);
     }
     
-    public void sleep(int milliseconds) {
-        if (currentlyRunning != null) {
-            Instant wakeUpTime = clock.instant().plusMillis(milliseconds);
-            currentlyRunning.setWakeUpTime(wakeUpTime);
-            sleepingProcesses.add(currentlyRunning);
-            // Move to the next process immediately since the current one is going to sleep
-            switchProcess();
-        }
+    public PCB getCurrentlyRunningPCB() {
+        return this.currentlyRunning;
     }
-
 }

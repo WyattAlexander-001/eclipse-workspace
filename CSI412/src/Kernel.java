@@ -77,16 +77,15 @@ public class Kernel implements Runnable {
 		this.maxPid = maxPid;
 	}
 	
-    private PCB getCurrentPCB() {
-        // Logic to return the currently executing PCB
-        return null; // Placeholder for actual implementation
-    }
+	private PCB getCurrentPCB() {
+	    return scheduler.getCurrentlyRunningPCB(); // Retrieve the currently executing PCB from the Scheduler
+	}
 	
 	
 	
-    private void sleepProcess(int milliseconds) {
-        scheduler.sleep(milliseconds); 
-    }
+	private void sleepProcess(int milliseconds) {
+	    scheduler.sleep(milliseconds); // Ensure this matches the method name in Scheduler
+	}
 
 
 }
