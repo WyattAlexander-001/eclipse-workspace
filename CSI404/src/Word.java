@@ -130,4 +130,15 @@ public class Word {
             this.setBit(i, new Bit(bitValue));
         }
     }
+    
+    public void increment() {
+        Bit carry = new Bit(true);
+        for (int i = 31; i >= 0 && carry.getValue(); i--) {
+            Bit currentBit = this.getBit(i);
+            Bit newBit = currentBit.xor(carry); // XOR the current bit with the carry, simulating addition
+            carry = currentBit.and(carry); // Determine the new carry
+            this.setBit(i, newBit); // Update the current bit with the result of the addition
+        }
+    }
+
 }

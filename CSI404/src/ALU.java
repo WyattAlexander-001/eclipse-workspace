@@ -75,7 +75,7 @@ public class ALU {
     }
 
 
-     Word add4(Word a, Word b, Word c, Word d) {
+    Word add4(Word a, Word b, Word c, Word d) {
         Word result = new Word();
         Bit carry = new Bit(false);
         for (int i = 31; i >= 0; i--) {
@@ -87,7 +87,7 @@ public class ALU {
             // First level of addition
             Bit sum1 = aBit.xor(bBit);
             Bit carry1 = aBit.and(bBit);
-            
+
             Bit sum2 = cBit.xor(dBit);
             Bit carry2 = cBit.and(dBit);
 
@@ -95,12 +95,12 @@ public class ALU {
             Bit finalSum = sum1.xor(sum2).xor(carry);
             result.setBit(i, finalSum);
 
-            // Carry calculation for next bit
-            Bit carryOut = sum1.and(sum2).or(carry1).or(carry2).or(carry.and(sum1.xor(sum2)));
-            carry = carryOut;
+            
+            carry = sum1.and(sum2).or(carry1.and(sum1.xor(sum2))).or(carry2.and(sum1.xor(sum2))).or(carry.and(sum1.xor(sum2)));
         }
         return result;
     }
+
 
     // Creates 1 for Two's Compliment
     Word intToWord(int value) {
