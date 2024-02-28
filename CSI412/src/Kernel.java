@@ -5,6 +5,8 @@ public class Kernel implements Runnable {
     private final Semaphore semaphore;
     private Scheduler scheduler; 
     private int maxPid;
+    private VFS vfs;
+    private int[][] processDeviceMappings = new int[10][10];
 
     public Kernel() {
         this.semaphore = new Semaphore(0);
