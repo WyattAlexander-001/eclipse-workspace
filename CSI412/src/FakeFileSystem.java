@@ -19,7 +19,7 @@ public class FakeFileSystem implements Device {
                     index = i;
                     break;
                 } catch (IOException e) {
-                    e.printStackTrace(); // Handle exception appropriately
+                    e.printStackTrace(); 
                 }
             }
         }
@@ -33,7 +33,7 @@ public class FakeFileSystem implements Device {
                 files[id].close();
                 files[id] = null; // Clear the slot after closing the file
             } catch (IOException e) {
-                e.printStackTrace(); // Handle exception appropriately
+                e.printStackTrace(); 
             }
         }
     }
@@ -50,10 +50,10 @@ public class FakeFileSystem implements Device {
                 }
                 return buffer;
             } catch (IOException e) {
-                e.printStackTrace(); // Handle exception appropriately
+                e.printStackTrace(); 
             }
         }
-        return new byte[0]; // Return an empty array if conditions are not met
+        return new byte[0]; 
     }
 
     @Override
@@ -62,7 +62,7 @@ public class FakeFileSystem implements Device {
             try {
                 files[id].seek(to);
             } catch (IOException e) {
-                e.printStackTrace(); // Handle exception appropriately
+                e.printStackTrace(); 
             }
         }
     }
@@ -72,11 +72,11 @@ public class FakeFileSystem implements Device {
         if (id >= 0 && id < files.length && files[id] != null && data != null) {
             try {
                 files[id].write(data);
-                return data.length; // Return the number of bytes written
+                return data.length;
             } catch (IOException e) {
-                e.printStackTrace(); // Handle exception appropriately
+                e.printStackTrace(); 
             }
         }
-        return 0; // Return 0 if the write operation was not successful
+        return 0; 
     }
 }

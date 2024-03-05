@@ -3,7 +3,7 @@ import java.util.concurrent.Semaphore;
 public abstract class UserlandProcess implements Runnable {
     private Thread thread;
     private final Semaphore semaphore;
-    private volatile boolean quantumExpired;
+    private boolean quantumExpired;
     private int pid;
 
     public UserlandProcess() {
@@ -20,7 +20,7 @@ public abstract class UserlandProcess implements Runnable {
     }
 
     public boolean isStopped() {
-        return !thread.isAlive();
+        return semaphore.availablePermits() == 0;
     }
 
     public boolean isDone() {
@@ -29,13 +29,18 @@ public abstract class UserlandProcess implements Runnable {
 
     public void start() {
         if (!thread.isAlive()) {
+        	semaphore.release(); // Initially allow the thread to proceed
             thread.start();
-            semaphore.release(); // Initially allow the thread to proceed
         }
     }
 
     public void stop() {
-        requestStop(); // Leverage requestStop for stopping logic
+//        requestStop();
+    	try {
+    		semaphore.acquire();
+    	} catch (InterruptedException e) {
+    		Thread.currentThread().interrupt();
+    	}
     }
 
     @Override
@@ -56,11 +61,8 @@ public abstract class UserlandProcess implements Runnable {
     public void cooperate() {
         if (quantumExpired) {
             quantumExpired = false; // Reset the flag
-            // Note: Assuming OS.switchProcess() effectively manages the switch without requiring semaphore release here
             OS.switchProcess();
-        } else {
-            semaphore.release(); // Allow the thread to continue or another to proceed
-        }
+        } 
     }
 
     public int getPid() {

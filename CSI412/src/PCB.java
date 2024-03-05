@@ -1,4 +1,5 @@
 import java.time.Instant;
+import java.util.Arrays;
 
 public class PCB {
     private static int nextPid = 1; // Static counter to assign unique PIDs
@@ -7,7 +8,13 @@ public class PCB {
     private Instant wakeUpTime;
     private Priority priority; // Enum for process priority
     private int timeoutCounter = 0; // Counter for timeouts leading to potential demotion
-
+    
+    private int[] deviceIds = new int[10];
+    // Initialize the array to -1 to indicate no device is open
+    {
+        Arrays.fill(deviceIds, -1);
+    }
+    
     public PCB(UserlandProcess up) {
         this.userlandProcess = up;
         this.pid = nextPid++; 
@@ -93,5 +100,18 @@ public class PCB {
     public void resetTimeoutCounter() {
         timeoutCounter = 0;
     }
+    
+    
+    public int[] getDeviceIds() {
+        return deviceIds;
+    }
+    public void setDeviceId(int index, int deviceId) {
+        if (index >= 0 && index < deviceIds.length) {
+            deviceIds[index] = deviceId;
+        }
+    }
+    
+    
+
 
 }

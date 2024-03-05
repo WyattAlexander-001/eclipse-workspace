@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="current"/>
+		<item key="selection" value="//System"/>
 		<item key="wrap" value="true"/>
-		<item key="casesensitive" value="true"/>
+		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="System"/>
+			<item value="semaphore"/>
+			<item value="start"/>
+			<item value="kernel.st"/>
+			<item value="        OS.createProcess(new HelloWorldProcess());"/>
+			<item value="demotion"/>
+			<item value="doOper"/>
+			<item value="doOp"/>
+			<item value="intoTo"/>
+			<item value="process"/>
 			<item value="current"/>
 			<item value="currentPro"/>
-			<item value="stop"/>
-			<item value="start"/>
-			<item value="scheduler.currentlyRunning.run();"/>
-			<item value="scheduler.cur"/>
-			<item value="scheduler.cu"/>
-			<item value="bit"/>
-			<item value="ParseBlock"/>
-			<item value="processState"/>
-			<item value="evaluateOpe"/>
-			<item value="parsefunc"/>
-			<item value="5"/>
-			<item value="score"/>
-			<item value="3"/>
 		</list>
 		<list key="replacehistory">
+			<item value="//System"/>
 			<item value=""/>
 			<item value="testBit"/>
 			<item value="test"/>
@@ -39,12 +37,11 @@
 			<item value="yearHalf"/>
 			<item value="constructor_example"/>
 			<item value="secondRangeLength"/>
-			<item value="SecondRangeLength"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="504"/>
-		<item key="DIALOG_Y_ORIGIN" value="578"/>
+		<item key="DIALOG_X_ORIGIN" value="0"/>
+		<item key="DIALOG_Y_ORIGIN" value="453"/>
 		<item key="DIALOG_WIDTH" value="336"/>
 		<item key="DIALOG_HEIGHT" value="402"/>
 		<item key="DIALOG_FONT_NAME" value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont"/>

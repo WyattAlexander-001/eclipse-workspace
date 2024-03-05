@@ -11,11 +11,18 @@ public class Scheduler {
     private LinkedList<PCB> processes; // Now handling PCB objects
     private Timer timer;
     public PCB currentlyRunning; // Updated to handle PCB
-    
+    private Kernel kernel;
     private Clock clock = Clock.systemDefaultZone(); // System clock with millisecond accuracy
     private List<PCB> sleepingProcesses = new ArrayList<>(); // List to track sleeping processes
 
     public Scheduler() {
+        processes = new LinkedList<>();
+        timer = new Timer();
+        scheduleInterrupt();
+    }
+    
+    public Scheduler(Kernel kernel) {
+        this.kernel = kernel;
         processes = new LinkedList<>();
         timer = new Timer();
         scheduleInterrupt();
@@ -35,14 +42,15 @@ public class Scheduler {
 
     public void switchProcess() {
         checkAndWakeUpProcesses(); // Check and wake up any processes ready to be woken up
-
         if (currentlyRunning != null && !currentlyRunning.isDone()) {
+        	System.out.println("Inside SWITCH PROCESS IN SCHEDULER: currentlyRunning != null && !currentlyRunning.isDone() ");
             processes.addLast(currentlyRunning); // Re-queue if not done
         }
 
         if (!processes.isEmpty()) {
+        	System.out.println("Inside SWITCH PROCESS IN SCHEDULER: !processes.isEmpty()");
             currentlyRunning = processes.poll();
-            currentlyRunning.getUserlandProcess().start(); // Start the userland process of the PCB
+            currentlyRunning.run(); // Start the userland process of the PCB
         } else {
             currentlyRunning = null;
         }
@@ -60,7 +68,7 @@ public class Scheduler {
     public void sleep(int milliseconds) {
         if (currentlyRunning != null) {
             Instant wakeUpTime = clock.instant().plusMillis(milliseconds);
-            currentlyRunning.setWakeUpTime(wakeUpTime); // Assume PCB has a setWakeUpTime method
+            currentlyRunning.setWakeUpTime(wakeUpTime); 
             sleepingProcesses.add(currentlyRunning);
             currentlyRunning = null; // Clear currentlyRunning to allow next process to run
             switchProcess(); // Immediately switch to next process
@@ -79,5 +87,13 @@ public class Scheduler {
     
     public PCB getCurrentlyRunningPCB() {
         return this.currentlyRunning;
+    }
+    
+    public void closeProcessDevices(PCB pcb) {
+        for (int deviceId : pcb.getDeviceIds()) {
+            if (deviceId != -1) {
+                kernel.Close(deviceId); // Use Kernel's Close method
+            }
+        }
     }
 }
