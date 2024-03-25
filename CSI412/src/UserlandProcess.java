@@ -7,20 +7,20 @@ public abstract class UserlandProcess implements Runnable {
     private int pid;
 
     public UserlandProcess() {
-        this.semaphore = new Semaphore(0); // Start with semaphore unavailable to enforce explicit control
-        this.thread = new Thread(this);
+        this.semaphore = new Semaphore(1); // Initialize to 1 to allow the thread to proceed immediately
         this.quantumExpired = false;
+        this.thread = new Thread(this);
+        thread.start();
     }
 
     public abstract void main();
 
     public void requestStop() {
         quantumExpired = true;
-        semaphore.release(); // Allow run() to proceed and check quantumExpired
     }
 
     public boolean isStopped() {
-        return semaphore.availablePermits() == 0;
+        return !thread.isAlive() || semaphore.availablePermits() == 0;
     }
 
     public boolean isDone() {
@@ -28,33 +28,34 @@ public abstract class UserlandProcess implements Runnable {
     }
 
     public void start() {
-        if (!thread.isAlive()) {
-        	semaphore.release(); // Initially allow the thread to proceed
-            thread.start();
-        }
+//        if (!thread.isAlive()) {
+//        	semaphore.release(); // Initially allow the thread to proceed
+//            thread.start();
+//        }
+        
+        semaphore.release();
     }
 
     public void stop() {
-//        requestStop();
-    	try {
-    		semaphore.acquire();
-    	} catch (InterruptedException e) {
-    		Thread.currentThread().interrupt();
-    	}
+        requestStop();
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     @Override
     public void run() {
         try {
-            while (!Thread.currentThread().isInterrupted()) {
-                semaphore.acquire(); // Wait for permission to proceed
-                if (quantumExpired) {
-                    break; // Exit if stop has been requested
-                }
+            semaphore.acquire(); 
+            if (!quantumExpired) {
                 main();
             }
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore the interrupted status
+            Thread.currentThread().interrupt(); 
+        } finally {
+            semaphore.release(); 
         }
     }
 

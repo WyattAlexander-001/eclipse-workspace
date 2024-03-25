@@ -1,3 +1,4 @@
+
 public class MainMemory {
     private static final Word[] memory = new Word[1024]; // Static memory array
 

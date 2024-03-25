@@ -1,7 +1,6 @@
 import java.util.concurrent.Semaphore;
 
 public class Kernel implements Runnable {
-//    private Thread thread;
     private final Semaphore semaphore = new Semaphore(0);
     private final Scheduler scheduler = new Scheduler(); 
     private int maxPid;

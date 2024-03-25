@@ -1,3 +1,4 @@
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collections;
@@ -254,6 +255,45 @@ class Word_Test {
         word.set(0); // Sets all bits to false
         assertEquals("f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f", word.toString(), "set with 0 should correctly set all bits to false");
     }
+    
+    @Test
+    void testIncrement() {
+        // Test incrementing from 0
+        word.set(0); // Initialize word to 0
+        word.increment();
+        assertEquals("f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,t", word.toString(), "Incrementing from 0 should result in 1");
+
+        // Test incrementing a mid-range value
+        word.set(8); // Set word to represent the value 8
+        word.increment();
+        assertEquals("f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,t,f,f,t", word.toString(), "Incrementing from 8 should result in 9");
+        
+        // Test incrementing with carry
+        word.set(15); // 0b...1111
+        word.increment();
+        assertEquals("f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,t,f,f,f,f", word.toString(), "Incrementing from 15 should result in 16");
+
+        // Test the edge case of overflow (e.g., from 0xFFFFFFFF to 0x00000000)
+        word.set(-1); // -1 represents all bits set in two's complement, equivalent to 0xFFFFFFFF
+        word.increment();
+        assertEquals("f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f", word.toString(), "Incrementing from 0xFFFFFFFF should wrap around to 0");
+    }
+    
+    @Test
+    void testIncrementOverflows() {
+        // Set word to maximum value before overflow
+        for (int i = 0; i < 32; i++) {
+            word.setBit(i, new Bit(true)); // 0xFFFFFFFF
+        }
+        word.increment(); // This should wrap to 0
+        
+        // Build expected result string for 0
+        String expectedResult = String.join(",", Collections.nCopies(32, "f"));
+        
+        assertEquals(expectedResult, word.toString(), "Incrementing maximum unsigned value should wrap to 0");
+    }
+    
+    
 
 }
 

@@ -1,3 +1,4 @@
+
 public class Bit {
     private boolean value;
     

@@ -1,3 +1,4 @@
+
 public class Word {
     private Bit[] bits;
 

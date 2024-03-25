@@ -92,7 +92,7 @@ public class Scheduler {
     public void closeProcessDevices(PCB pcb) {
         for (int deviceId : pcb.getDeviceIds()) {
             if (deviceId != -1) {
-                kernel.Close(deviceId); // Use Kernel's Close method
+                kernel.Close(deviceId); 
             }
         }
     }

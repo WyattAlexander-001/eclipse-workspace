@@ -3,9 +3,9 @@ import java.util.List;
 
 public class VFS implements Device {
     private List<DeviceMapping> mappings = new ArrayList<>();
-    private RandomDevice randomDevice = new RandomDevice(); // Assuming you have this device implemented
-    private FakeFileSystem fakeFileSystem = new FakeFileSystem(); // Assuming you have this device implemented
-
+    private RandomDevice randomDevice = new RandomDevice(); 
+    private FakeFileSystem fakeFileSystem = new FakeFileSystem(); 
+    
     @Override
     public int Open(String input) {
         String[] parts = input.split(" ", 2);
@@ -36,7 +36,7 @@ public class VFS implements Device {
         if (vfsId >= 0 && vfsId < mappings.size()) {
             DeviceMapping mapping = mappings.get(vfsId);
             mapping.device.Close(mapping.deviceId);
-            mappings.set(vfsId, null); // Remove the mapping
+            mappings.set(vfsId, null); 
         }
     }
 

@@ -3,6 +3,7 @@
     <libraryInfo home="/Users/absinthe/.p2/pool/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.macosx.x86_64_17.0.4.v20220805-1047" version="17.0.4"/>
     <libraryInfo home="/Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/Home" version="19.0.1"/>
     <libraryInfo home="/Users/absinthe/.p2/pool/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.macosx.x86_64_17.0.4.v20220805-1047/jre" version="17.0.4"/>
+    <libraryInfo home="/Users/absinthe/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home" version="21.0.2"/>
     <libraryInfo home="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home" version="1.8.0_401">
         <bootpath>
             <entry path="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/resources.jar"/>
