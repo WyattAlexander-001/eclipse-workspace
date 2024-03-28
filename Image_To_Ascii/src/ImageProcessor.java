@@ -49,6 +49,10 @@ public class ImageProcessor {
         }
         return bufferedImage;
     }
+    
+    public String getImagePath() {
+        return imagePath;
+    }
 
     /**
      * Get the pixels of the image as a 2D int array

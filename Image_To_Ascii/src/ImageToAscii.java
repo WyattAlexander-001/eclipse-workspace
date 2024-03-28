@@ -1,6 +1,9 @@
 // ImageToAscii class to convert an image to ASCII characters
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 public class ImageToAscii {
 
@@ -30,15 +33,41 @@ public class ImageToAscii {
 //        }
 //    }
     
+    //Improved version for console WITH COLOR
+//    public void printAsciiMatrix() {
+//        char[][] asciiMatrix = setAsciiMatrix(processor.getBrightnessMatrix());
+//        for (int i = 0; i < asciiMatrix.length; i++) {
+//            for (int j = 0; j < asciiMatrix[0].length; j++) {
+//                System.out.print(AsciiColor.getColor(Color.YELLOW) + asciiMatrix[i][j] + AsciiColor.ANSI_RESET);
+//            }
+//            System.out.println();
+//        }
+//    }    
+   
+    //For exporting a file:
     public void printAsciiMatrix() {
-        char[][] asciiMatrix = setAsciiMatrix(processor.getBrightnessMatrix());
-        for (int i = 0; i < asciiMatrix.length; i++) {
-            for (int j = 0; j < asciiMatrix[0].length; j++) {
-                System.out.print(AsciiColor.getColor(Color.YELLOW) + asciiMatrix[i][j] + AsciiColor.ANSI_RESET);
+        String originalImagePath = processor.getImagePath(); 
+        File originalFile = new File(originalImagePath);
+        String baseFileName = originalFile.getName();
+        baseFileName = baseFileName.substring(0, baseFileName.lastIndexOf('.'));
+        String fileName = baseFileName + "_ascii_art.txt";
+        
+        try (PrintWriter writer = new PrintWriter(fileName)) {
+            char[][] asciiMatrix = setAsciiMatrix(processor.getBrightnessMatrix());
+            for (int i = 0; i < asciiMatrix.length; i++) {
+                for (int j = 0; j < asciiMatrix[0].length; j++) {
+                    // Write ASCII characters without ANSI color codes
+                    writer.print(asciiMatrix[i][j]);
+                }
+                writer.println();
             }
-            System.out.println();
+            System.out.println("ASCII art has been successfully saved to " + fileName);
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred while saving the ASCII art.");
+            e.printStackTrace();
         }
     }
+
 
     // Method to set the ASCII matrix using the brightness matrix
     private static char[][] setAsciiMatrix(int[][] brightnessMatrix) {
