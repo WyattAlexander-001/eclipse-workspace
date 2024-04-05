@@ -14,6 +14,9 @@ public class PCB {
     private String processName;
     
     private final Queue<KernelMessage> messageQueue = new LinkedList<>();
+    
+    private int[] pageTable = new int[1024]; // Page table for virtual to physical page mappings
+
 
 
 
@@ -27,7 +30,10 @@ public class PCB {
     public PCB(UserlandProcess up) {
         this.userlandProcess = up;
         this.pid = nextPid++; 
+        Arrays.fill(deviceIds, -1); // Initialize device IDs to -1
+        Arrays.fill(pageTable, -1); // Initialize page table to -1 indicating no mapping
     }
+    
     
     public PCB(UserlandProcess up, Priority priority) {
         this.userlandProcess = up;
@@ -135,6 +141,19 @@ public class PCB {
     // Method to get and remove the next message from the queue
     public KernelMessage getNextMessage() {
         return messageQueue.poll();
+    }
+    
+    public void setPageMapping(int virtualPageIndex, int physicalPageIndex) {
+        if (virtualPageIndex >= 0 && virtualPageIndex < pageTable.length) {
+            pageTable[virtualPageIndex] = physicalPageIndex;
+        }
+    }
+    
+    public int getPageMapping(int virtualPageIndex) {
+        if (virtualPageIndex >= 0 && virtualPageIndex < pageTable.length) {
+            return pageTable[virtualPageIndex];
+        }
+        return -1; // Return -1 if the index is out of bounds or no mapping exists
     }
 
 

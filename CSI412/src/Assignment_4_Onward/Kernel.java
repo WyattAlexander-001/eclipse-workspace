@@ -1,4 +1,5 @@
 package Assignment_4_Onward;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
@@ -10,6 +11,12 @@ public class Kernel implements Runnable {
     private VFS vfs;
     private int[][] processDeviceMappings = new int[10][10];
     private Map<Integer, PCB> pidToPCBMap = new HashMap<>();
+    private boolean[] physicalPages = new boolean[1024]; 
+
+    public Kernel() {
+        // Initialize all pages as free
+        Arrays.fill(physicalPages, true);
+    }
 
 
 
@@ -175,7 +182,36 @@ public class Kernel implements Runnable {
         }
         return null;
     }
+    public PCB getPCB(int pid) {
+        return pidToPCBMap.get(pid);
+    }
     
+    public int allocatePhysicalPageForProcess(int pid, int virtualPage) {
+        PCB pcb = getPCB(pid);
+        if (pcb != null) {
+            int physicalPage = findFreePhysicalPage();
+            if (physicalPage != -1) {
+                // Update the PCB's page table with the new mapping
+                pcb.setPageMapping(virtualPage, physicalPage);
+                return physicalPage;
+            }
+        }
+        return -1; 
+    }
+    
+    public int findFreePhysicalPage() {
+        for (int i = 0; i < physicalPages.length; i++) {
+            if (physicalPages[i]) { // If true, the page is free
+                physicalPages[i] = false; // Mark as used
+                return i; // Return the physical page number
+            }
+        }
+        return -1; 
+    }
+
+    
+    
+
     
 
 }

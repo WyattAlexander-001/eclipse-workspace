@@ -23,8 +23,6 @@ public class OS {
     public static void createProcess(UserlandProcess up) {
     	resetParameters();
     	parameters.add(up);
-//    	parameters.add(priority)
-//        setKernelCall(CallType.CREATE_PROCESS, up); // Set the current call type
     	currentCall = CallType.CREATE_PROCESS;
         switchToKernel(); // Switch control to the kernel
     }
@@ -98,6 +96,21 @@ public class OS {
 	                 .map(PCB::getPid)
 	                 .orElse(-1);
 	}
+	
+	public static int requestPageMapping(int virtualPage) {
+	    int pid = getPid();
+	    PCB pcb = kernel.getPCB(pid); 
+	    if (pcb != null) {
+	        return pcb.getPageMapping(virtualPage);
+	    }
+	    return -1; 
+	}
+	
+	public static int allocatePhysicalPage(int virtualPage) {
+	    int pid = getPid();
+	    return kernel.allocatePhysicalPageForProcess(pid, virtualPage);
+	}
+
 	
 	
 

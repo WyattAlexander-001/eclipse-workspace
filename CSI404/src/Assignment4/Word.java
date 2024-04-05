@@ -141,5 +141,18 @@ public class Word {
             this.setBit(i, newBit); // Update the current bit with the result of the addition
         }
     }
+    
+    public void decrement() {
+        Bit borrow = new Bit(true);
+        for (int i = 31; i >= 0 && borrow.getValue(); i--) {
+            Bit currentBit = this.getBit(i);
+            Bit newBit = currentBit.xor(borrow); // XOR the current bit with the borrow, simulating subtraction
+            borrow = currentBit.not().and(borrow); // Determine the new borrow
+            this.setBit(i, newBit); // Update the current bit with the result of the subtraction
+        }
+    }
+
+    
+    
 
 }
