@@ -5,6 +5,10 @@ import java.io.IOException;
 
 public class FakeFileSystem implements Device {
     private final RandomAccessFile[] files = new RandomAccessFile[10];
+    
+    //Last Assignment:
+    private RandomAccessFile swapFile;
+    private int nextPageToWrite = 0;
 
     @Override
     public int Open(String filename) {
@@ -79,5 +83,30 @@ public class FakeFileSystem implements Device {
             }
         }
         return 0; 
+    }
+    
+
+    //Last Assignment:
+    public void createSwapFile(String swapFileName) {
+        try {
+            swapFile = new RandomAccessFile(swapFileName, "rw");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int writeToSwap(byte[] data) {
+        if (swapFile != null) {
+            try {
+                swapFile.seek(nextPageToWrite * 1024); // Calculate offset for the next page
+                swapFile.write(data);
+                int writtenPage = nextPageToWrite;
+                nextPageToWrite++; // Increment to the next page
+                return writtenPage;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
     }
 }

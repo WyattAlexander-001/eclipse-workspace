@@ -9,6 +9,7 @@ public class Kernel implements Runnable {
     private final Scheduler scheduler = new Scheduler(); 
     private int maxPid;
     private VFS vfs;
+    private FakeFileSystem fakeFileSystem; //Last
     private int[][] processDeviceMappings = new int[10][10];
     private Map<Integer, PCB> pidToPCBMap = new HashMap<>();
     private boolean[] physicalPages = new boolean[1024]; 
@@ -16,6 +17,8 @@ public class Kernel implements Runnable {
     public Kernel() {
         // Initialize all pages as free
         Arrays.fill(physicalPages, true);
+        this.fakeFileSystem = new FakeFileSystem(); // Initialize FakeFileSystem
+        this.fakeFileSystem.createSwapFile("swapfile.dat"); // Specify the swap file name
     }
 
 
@@ -186,18 +189,34 @@ public class Kernel implements Runnable {
         return pidToPCBMap.get(pid);
     }
     
+//    public int allocatePhysicalPageForProcess(int pid, int virtualPage) {
+//        PCB pcb = getPCB(pid);
+//        if (pcb != null) {
+//            int physicalPage = findFreePhysicalPage();
+//            if (physicalPage != -1) {
+//                // Update the PCB's page table with the new mapping
+//                pcb.setPageMapping(virtualPage, physicalPage);
+//                return physicalPage;
+//            }
+//        }
+//        return -1; 
+//    }
+    
     public int allocatePhysicalPageForProcess(int pid, int virtualPage) {
         PCB pcb = getPCB(pid);
         if (pcb != null) {
             int physicalPage = findFreePhysicalPage();
             if (physicalPage != -1) {
                 // Update the PCB's page table with the new mapping
-                pcb.setPageMapping(virtualPage, physicalPage);
+                pcb.setPageMapping(virtualPage, physicalPage, -1);
                 return physicalPage;
             }
         }
         return -1; 
     }
+
+    
+    
     
     public int findFreePhysicalPage() {
         for (int i = 0; i < physicalPages.length; i++) {
@@ -208,6 +227,62 @@ public class Kernel implements Runnable {
         }
         return -1; 
     }
+    
+    //Last
+    public void allocateVirtualMemory(int pid, int numberOfPages) {
+        PCB pcb = getPCB(pid); // Retrieve the PCB using the existing method
+        if (pcb != null) {
+            for (int i = 0; i < numberOfPages; i++) {
+                // Find the first available null entry in the page table
+                for (int j = 0; j < pcb.getPageTable().length; j++) {
+                    if (pcb.getPageTable()[j] == null) {
+                        pcb.getPageTable()[j] = new VirtualToPhysicalMapping(); // Placeholder for future physical allocation
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    public void freeMemory(int pid, int virtualPage) {
+        PCB pcb = getPCB(pid);
+        if (pcb != null && virtualPage >= 0 && virtualPage < pcb.getPageTable().length) {
+            VirtualToPhysicalMapping mapping = pcb.getPageTable()[virtualPage];
+            if (mapping != null && mapping.physicalPageNumber != -1) {
+                // Free the physical page
+                freePhysicalPage(mapping.physicalPageNumber);
+                // Set the virtual mapping to null
+                pcb.getPageTable()[virtualPage] = null;
+            }
+        }
+    }
+    
+    private void freePhysicalPage(int physicalPage) {
+        if (physicalPage >= 0 && physicalPage < physicalPages.length) {
+            physicalPages[physicalPage] = true; // Mark this page as free again
+        }
+    }
+    
+    public FakeFileSystem getFakeFileSystem() {
+        return fakeFileSystem;
+    }
+    
+    public byte[] readPhysicalMemory(int physicalPageNumber) {
+        byte[] physicalMemory = new byte[1024 * 1024]; // Example: 1MB of physical memory
+        byte[] data = new byte[1024]; // Data to read from the physical page
+        if (physicalPageNumber >= 0 && (physicalPageNumber * 1024 + 1023) < physicalMemory.length) {
+            System.arraycopy(physicalMemory, physicalPageNumber * 1024, data, 0, 1024);
+        }
+        return data;
+    }
+
+    
+    
+    
+    
+
+
+
 
     
     

@@ -2,9 +2,11 @@ package Assignment_4_Onward;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
@@ -103,4 +105,34 @@ public class Scheduler {
 	public LinkedList<PCB> getProcesses() {
 		return this.processes;
 	}
+	
+	//Last
+	
+    public PCB getRandomProcess() {
+        // Randomly select a process that has an allocated physical page
+        Random random = new Random();
+        List<PCB> candidates = processes.stream()
+            .filter(pcb -> Arrays.stream(pcb.getPageTable())
+                                 .anyMatch(mapping -> mapping != null && mapping.physicalPageNumber != -1))
+            .collect(Collectors.toList());
+        if (!candidates.isEmpty()) {
+            return candidates.get(random.nextInt(candidates.size()));
+        }
+        return null; // No suitable process found
+    }
+    
+    public void performPageSwap(PCB victimPCB, int virtualPage) {
+        for (VirtualToPhysicalMapping mapping : victimPCB.getPageTable()) {
+            if (mapping != null && mapping.physicalPageNumber != -1) {
+                byte[] dataToSwap = OS.getKernel().readPhysicalMemory(mapping.physicalPageNumber); // Simulate reading from physical memory
+                int diskPage = OS.getKernel().getFakeFileSystem().writeToSwap(dataToSwap);
+                mapping.diskPageNumber = diskPage; // Update the disk page number
+                mapping.physicalPageNumber = -1; // Free the physical page
+                break;
+            }
+        }
+    }
+
+
+
 }

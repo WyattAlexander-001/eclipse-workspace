@@ -16,7 +16,7 @@ public class OS {
         createProcess(init); 
 //        createProcess(new IdleProcess()); 
 //        switchToKernel(); 
-        kernel.start(); //This looks like it's not even getting hit
+        getKernel().start(); //This looks like it's not even getting hit
         System.out.println("JUST RAN KERNEL.START INSIDE STARTUP METHOD");
     }
 
@@ -35,13 +35,13 @@ public class OS {
 
     private static void switchToKernel() {
     	System.out.println("INSIDE SWITCH TO KERNEL METHOD");
-        kernel.start(); // Start or wake up the kernel thread
+        getKernel().start(); // Start or wake up the kernel thread
         System.out.println("JUST DID KERNEL.start()");
-        if (kernel.getScheduler().currentlyRunning != null) {
-            kernel.getScheduler().currentlyRunning.stop(); // Stop the current user process
+        if (getKernel().getScheduler().currentlyRunning != null) {
+            getKernel().getScheduler().currentlyRunning.stop(); // Stop the current user process
         } else {
             // If nothing is running, we enter an idle state
-            while (kernel.getScheduler().currentlyRunning == null) {
+            while (getKernel().getScheduler().currentlyRunning == null) {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -85,38 +85,54 @@ public class OS {
 	}
 	
 	public static int getPid() {
-	    PCB currentPCB = kernel.getScheduler().getCurrentlyRunningPCB();
+	    PCB currentPCB = getKernel().getScheduler().getCurrentlyRunningPCB();
 	    return currentPCB != null ? currentPCB.getPid() : -1;
 	}
 
 	public static int getPidByName(String name) {
-	    return kernel.getScheduler().getProcesses().stream()
+	    return getKernel().getScheduler().getProcesses().stream()
 	                 .filter(pcb -> name.equals(pcb.getUserlandProcess()))
 	                 .findFirst()
 	                 .map(PCB::getPid)
 	                 .orElse(-1);
 	}
 	
+//	public static int requestPageMapping(int virtualPage) {
+//	    int pid = getPid();
+//	    PCB pcb = kernel.getPCB(pid); 
+//	    if (pcb != null) {
+//	        return pcb.getPageMapping(virtualPage);
+//	    }
+//	    return -1; 
+//	}
+	
 	public static int requestPageMapping(int virtualPage) {
 	    int pid = getPid();
-	    PCB pcb = kernel.getPCB(pid); 
+	    PCB pcb = getKernel().getPCB(pid); 
 	    if (pcb != null) {
-	        return pcb.getPageMapping(virtualPage);
+	        VirtualToPhysicalMapping mapping = pcb.getPageMapping(virtualPage);
+	        if (mapping != null) {
+	            // Return the physical page number if it's valid
+	            if (mapping.physicalPageNumber != -1) {
+	                return mapping.physicalPageNumber;
+	            }
+	        }
 	    }
-	    return -1; 
+	    return -1; // Return -1 if no valid mapping is found
 	}
-	
+
 	public static int allocatePhysicalPage(int virtualPage) {
 	    int pid = getPid();
-	    return kernel.allocatePhysicalPageForProcess(pid, virtualPage);
+	    return getKernel().allocatePhysicalPageForProcess(pid, virtualPage);
 	}
 
-	
+	public static Kernel getKernel() {
+		return kernel;
+	}
 	
 
 	
 	
-
 
 }
 

@@ -123,20 +123,44 @@ public abstract class UserlandProcess implements Runnable {
         tlb[0][1] = physicalPage;
     }
     
- // In UserlandProcess.java
+//    private int GetMapping(int virtualPage) {
+//        // Attempt to get the current physical page mapping for the virtual page
+//        int physicalPage = OS.requestPageMapping(virtualPage);
+//
+//        if (physicalPage == -1) {
+//            // The virtual page is not mapped, request a new physical page
+//            physicalPage = OS.allocatePhysicalPage(virtualPage);
+//            
+//            if (physicalPage != -1) {
+//                // Successfully allocated a new physical page, update TLB
+//                UpdateTLB(virtualPage, physicalPage);
+//            } else {
+//                // Allocation failed, handle error
+//                System.err.println("Failed to allocate physical page for virtual page " + virtualPage);
+//            }
+//        } else {
+//            UpdateTLB(virtualPage, physicalPage);
+//        }
+//        
+//        return physicalPage;
+//    }
+    
     private int GetMapping(int virtualPage) {
-        // Attempt to get the current physical page mapping for the virtual page
         int physicalPage = OS.requestPageMapping(virtualPage);
 
         if (physicalPage == -1) {
-            // The virtual page is not mapped, request a new physical page
             physicalPage = OS.allocatePhysicalPage(virtualPage);
-            
+            if (physicalPage == -1) {
+                PCB victimPCB = OS.getKernel().getScheduler().getRandomProcess();
+                if (victimPCB != null) {
+                    OS.getKernel().getScheduler().performPageSwap(victimPCB, virtualPage);
+                    physicalPage = OS.allocatePhysicalPage(virtualPage);
+                }
+            }
+
             if (physicalPage != -1) {
-                // Successfully allocated a new physical page, update TLB
                 UpdateTLB(virtualPage, physicalPage);
             } else {
-                // Allocation failed, handle error
                 System.err.println("Failed to allocate physical page for virtual page " + virtualPage);
             }
         } else {
@@ -145,6 +169,9 @@ public abstract class UserlandProcess implements Runnable {
         
         return physicalPage;
     }
+
+
+
 
 
     

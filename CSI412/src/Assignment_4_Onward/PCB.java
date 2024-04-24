@@ -15,9 +15,19 @@ public class PCB {
     
     private final Queue<KernelMessage> messageQueue = new LinkedList<>();
     
-    private int[] pageTable = new int[1024]; // Page table for virtual to physical page mappings
+    //private int[] pageTable = new int[1024]; // Page table for virtual to physical page mappings
 
+    //Last
+    private VirtualToPhysicalMapping[] pageTable = new VirtualToPhysicalMapping[100]; // Adjusted size as per requirement
 
+    public PCB(UserlandProcess up) {
+        this.userlandProcess = up;
+        this.pid = nextPid++;
+        Arrays.fill(deviceIds, -1);
+        for (int i = 0; i < getPageTable().length; i++) {
+            getPageTable()[i] = new VirtualToPhysicalMapping(); // Initialize each mapping
+        }
+    }
 
 
     
@@ -27,12 +37,12 @@ public class PCB {
         Arrays.fill(deviceIds, -1);
     }
     
-    public PCB(UserlandProcess up) {
-        this.userlandProcess = up;
-        this.pid = nextPid++; 
-        Arrays.fill(deviceIds, -1); // Initialize device IDs to -1
-        Arrays.fill(pageTable, -1); // Initialize page table to -1 indicating no mapping
-    }
+//    public PCB(UserlandProcess up) {
+//        this.userlandProcess = up;
+//        this.pid = nextPid++; 
+//        Arrays.fill(deviceIds, -1); // Initialize device IDs to -1
+//        Arrays.fill(pageTable, -1); // Initialize page table to -1 indicating no mapping
+//    }
     
     
     public PCB(UserlandProcess up, Priority priority) {
@@ -143,19 +153,44 @@ public class PCB {
         return messageQueue.poll();
     }
     
-    public void setPageMapping(int virtualPageIndex, int physicalPageIndex) {
-        if (virtualPageIndex >= 0 && virtualPageIndex < pageTable.length) {
-            pageTable[virtualPageIndex] = physicalPageIndex;
-        }
-    }
+//    public void setPageMapping(int virtualPageIndex, int physicalPageIndex) {
+//        if (virtualPageIndex >= 0 && virtualPageIndex < pageTable.length) {
+//            pageTable[virtualPageIndex] = physicalPageIndex;
+//        }
+//    }
+//    
+//    public int getPageMapping(int virtualPageIndex) {
+//        if (virtualPageIndex >= 0 && virtualPageIndex < pageTable.length) {
+//            return pageTable[virtualPageIndex];
+//        }
+//        return -1; // Return -1 if the index is out of bounds or no mapping exists
+//    }
     
-    public int getPageMapping(int virtualPageIndex) {
-        if (virtualPageIndex >= 0 && virtualPageIndex < pageTable.length) {
-            return pageTable[virtualPageIndex];
+    public void setPageMapping(int virtualPageIndex, int physicalPageIndex, int diskPageIndex) {
+        if (virtualPageIndex >= 0 && virtualPageIndex < getPageTable().length) {
+            getPageTable()[virtualPageIndex].physicalPageNumber = physicalPageIndex;
+            getPageTable()[virtualPageIndex].diskPageNumber = diskPageIndex;
         }
-        return -1; // Return -1 if the index is out of bounds or no mapping exists
     }
 
+    public VirtualToPhysicalMapping getPageMapping(int virtualPageIndex) {
+        if (virtualPageIndex >= 0 && virtualPageIndex < getPageTable().length) {
+            return getPageTable()[virtualPageIndex];
+        }
+        return null; // Return null if the index is out of bounds
+    }
+
+	public VirtualToPhysicalMapping[] getPageTable() {
+		return pageTable;
+	}
+
+	public void setPageTable(VirtualToPhysicalMapping[] pageTable) {
+		this.pageTable = pageTable;
+	}
+    
+    
+
+    
 
     
     
